@@ -14,8 +14,6 @@ pygame.display.set_caption("Track and Field Game")
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
 
 # Player properties
 player_width, player_height = 50, 50
@@ -26,10 +24,10 @@ is_jumping = False
 jump_count = 10
 
 # Hurdle properties
-hurdle_width, hurdle_height = 50, 80  # Increased hurdle height
-hurdle_vel = 10  # Increased initial hurdle speed
-hurdle_speed_increase = 1.0  # Increased rate of increase in hurdle speed
-hurdle_speed_increase_interval = 1  # Decreased interval between speed increases
+hurdle_width, hurdle_height = 50, 80
+hurdle_vel = 10
+hurdle_speed_increase = 1.0
+hurdle_speed_increase_interval = 1
 last_speed_increase_time = pygame.time.get_ticks()
 
 # Camera properties
@@ -42,28 +40,14 @@ max_player_x = wid - player_width
 start_time = pygame.time.get_ticks()
 current_speed = 15  # Initial speed
 
-# Hurdle types and colors
-HurdleType = {
-    "NORMAL": 0,
-    "HIGH": 1,
-    "LOW": 2
-}
-
-HurdleColor = {
-    "NORMAL": GREEN,
-    "HIGH": RED,
-    "LOW": BLUE
-}
-
 # Main game loop
 clock = pygame.time.Clock()
 
 class Hurdle:
-    def __init__(self, x, hurdle_type):
+    def __init__(self, x):
         self.x = x
         self.y = hei - hurdle_height - 50
-        self.type = hurdle_type
-        self.color = HurdleColor[hurdle_type]
+        self.color = GREEN
 
     def draw(self):
         pygame.draw.rect(screen, self.color, (self.x, self.y, hurdle_width, hurdle_height))
@@ -95,10 +79,9 @@ def move_player():
             jump_count = 10
 
 def create_hurdle():
-    hurdle_type = random.choice([HurdleType["NORMAL"], HurdleType["HIGH"], HurdleType["LOW"]])
     # Randomize spacing between hurdles with larger gap
-    x_distance = random.randint(wid // 2, wid * 3 // 4)  # Adjust range for larger gap
-    return Hurdle(wid + x_distance, hurdle_type)
+    x_distance = random.randint(wid // 2, wid * 3 // 4)
+    return Hurdle(wid + x_distance)
 
 def move_hurdles(hurdles):
     for hurdle in hurdles:
@@ -139,9 +122,7 @@ while running:
 
     # Create new hurdles
     if len(hurdles) == 0 or hurdles[-1].x < wid - wid / 4:  # Distance between hurdles
-        # Increased number of hurdles created each time
-        for _ in range(random.randint(2, 4)):
-            hurdles.append(create_hurdle())
+        hurdles.append(create_hurdle())
 
     # Increase hurdle speed over time
     increase_hurdle_speed()
