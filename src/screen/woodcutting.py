@@ -7,26 +7,19 @@ from screen.screen import Screen
 
 class WoodcuttingScreen(Screen):
 
-    # def init(self):
-    #     super().__init__()
-    #     self.score = 0
-    #     self.selected_tree = None
-    #     self.chop = 5
         
     def render(self):
         # Initialize Pygame
         pygame.init()
 
-        self.score = 0
-        self.selected_tree = None
-        self.chop = 5
-
-        # Set up the screen
-        # SCREEN_WIDTH = 1000
-        # SCREEN_HEIGHT = 650
         screen = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
         pygame.display.set_caption("Daily Grind - Woodcutting (Strength)")
 
+        # Initialise class attributes
+        self.score = 0
+        self.selected_tree = None
+        self.chop = 5
+        
         # Colors
         WHITE = (255, 255, 255)
         BLACK = (0, 0, 0)
@@ -38,23 +31,15 @@ class WoodcuttingScreen(Screen):
 
         tree_postion = {'tree_1': (130, 315), 'tree_2': (245, 370), 'tree_3': (370, 470), 'tree_4': (540, 435), 'tree_5': (670, 375), 'tree_6': (825, 470)}
         
-        
-
-
         # Load images
-        # button_image = pygame.image.load("./src/assets/delete.png")
-        background_image = pygame.image.load("./assets/wood_cutting_bg.jpg")  # Replace "button_image.png" with your button image file
-        
+        background_image = pygame.image.load("./assets/wood_cutting_bg.jpg") 
 
         # Button dimensions
         BUTTON_WIDTH = 200
         BUTTON_HEIGHT = 50
 
-        # def draw_button(x, y):
-        #     screen.blit(button_image, (x, y))
 
         def draw_background(x, y):
-            # background_surface = screen.blit(background_image, (x, y))
             background_surface = pygame.transform.scale(background_image, (x, y))
             rect = background_surface.get_rect()
             rect = rect.move(10, 10)
@@ -63,10 +48,14 @@ class WoodcuttingScreen(Screen):
         def display_cutting_clickable():
             screen.blit(cutting_surface, cutting_rect)
         
-        # def set_tree(cutting_surface: pygame.Surface, tree: str):
-        #     print(tree)
-        #     cutting_rect = cutting_surface.get_rect(center = tree_postion[tree])
-        #     display_cutting_clickable(cutting_rect)
+        def set_tree():
+            self.selected_tree = random.choice(list(tree_postion.keys()))
+            print(self.selected_tree)
+            cutting_image = pygame.image.load('./assets/axe_static.png')
+            cutting_surface = pygame.transform.scale(cutting_image, (70, 70))
+            cutting_rect = cutting_surface.get_rect(center = tree_postion[self.selected_tree])
+
+            return cutting_surface, cutting_rect
 
         def is_button_clicked(mouse_pos, button_pos):
             button_rect = pygame.Rect(button_pos, (70, 70))
@@ -77,21 +66,8 @@ class WoodcuttingScreen(Screen):
         while running:
             # Handle events
             if self.selected_tree == None:
-                self.selected_tree = random.choice(list(tree_postion.keys()))
-                print(self.selected_tree)
-                cutting_image = pygame.image.load('./assets/axe_static.png')
-                cutting_surface = pygame.transform.scale(cutting_image, (70, 70))
-                cutting_surface.set_colorkey(BLACK)
-                cutting_rect = cutting_surface.get_rect(center = tree_postion[self.selected_tree])
-                # print(self.selected_tree)
-                # set_tree(cutting_surface, self.selected_tree)
-
-                cutting_rect = cutting_surface.get_rect(center = tree_postion[self.selected_tree])
-                # screen.blit(cutting_surface, cutting_rect)
-
-
-            
-
+                cutting_surface, cutting_rect = set_tree()
+                
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -117,8 +93,18 @@ class WoodcuttingScreen(Screen):
             draw_background(self.width - 20, self.height - 20)
             screen.blit(text_surface, (400, 200))
 
-            # display_cutting_clickable()
+            # display cutting icon
             display_cutting_clickable()
+
+
+            scoreboard = pygame.Surface((200, 60)) 
+            scoreboard.set_alpha(200)               
+            scoreboard.fill(STRENGTH_THEME)      
+            scoreboard_rect: pygame.Rect = scoreboard.get_rect()  
+            score = pygame.font.Font(None, 36)
+            score_surface = score.render(f"Trees Cut: {self.score}", True, BLACK) 
+            scoreboard.blit(score_surface, (20, 18))
+            screen.blit(scoreboard, (self.width - 200, 10))
 
             # Update the display
             pygame.display.flip()
