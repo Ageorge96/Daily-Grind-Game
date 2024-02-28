@@ -1,0 +1,61 @@
+{
+    "button":
+    {
+        "colours":
+         {
+             "normal_text": "#ffffff"
+         },
+         
+        "font":
+        {
+            "name": "robotomono",
+            "size": "16",
+            "regular_resource": {
+                 "package": "resources.fonts",
+                 "resource": "RobotoMono-Regular.ttf"
+            }
+        }
+    },
+
+    "text_entry_line":
+    {
+        "colours":
+         {
+             "normal_text": "#ffffff"
+         },
+
+         "font":
+        {
+            "name": "robotomono",
+            "size": "16",
+            "regular_resource": {
+                 "package": "resources.fonts",
+                 "resource": "RobotoMono-Regular.ttf"
+            }
+        },
+
+        "misc":
+         {
+             "padding": "10,10"
+         }
+    },
+
+    "#error_message":
+    {
+       "colours":
+         {
+             "normal_text": "#ff0000"
+         },
+
+        "font":
+        {
+            "name": "robotomono",
+            "size": "14",
+            "regular_resource": {
+                 "package": "resources.fonts",
+                 "resource": "RobotoMono-Regular.ttf"
+            }
+        }
+
+    }
+}
