@@ -1,6 +1,5 @@
 from screen.login import LoginScreen
 from screen.main import MainScreen
-import pygame
 
 Login = LoginScreen(1000, 650)
 Main = MainScreen(1000, 650)

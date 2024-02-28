@@ -1,5 +1,6 @@
 import pygame
 import pygame_gui
+
 from screen.screen import Screen
 
 class MainScreen(Screen):    
@@ -7,7 +8,7 @@ class MainScreen(Screen):
         pygame.init()
 
         pygame.display.set_caption('The Daily Grind - Main')
-        window_surface = pygame.display.set_mode((self.width, self.height))
+        window_surface = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
 
         background = pygame.Surface((self.width, self.height))
         background.fill(pygame.Color('#000000'))

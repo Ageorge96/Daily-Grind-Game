@@ -1,13 +1,25 @@
 import pygame
 import pygame_gui
+
 from screen.screen import Screen
+from pygame_gui.elements import UIButton, UITextEntryLine, UILabel
+from pygame_gui.core import ObjectID
+
+def validate_field(text):
+    if text != '' and text != None:
+        return True
+    else:
+        return False
+    
+def validate_password(password):
+    pass
 
 class LoginScreen(Screen):
     def render(self):
         pygame.init()
 
         pygame.display.set_caption('The Daily Grind - Login')
-        window_surface = pygame.display.set_mode((self.width, self.height))
+        window_surface = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
 
         background = pygame.Surface((self.width, self.height))
         background.fill(pygame.Color('#ffffff'))
@@ -19,24 +31,26 @@ class LoginScreen(Screen):
         text_rect = text.get_rect(center=(self.width/2, 120))
         
         
-        username_field = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((self.width/2 - 300/2, 185), (300, 50)),
+        username_field = UITextEntryLine(relative_rect=pygame.Rect((self.width/2 - 300/2, 185), (300, 50)),
                                                 placeholder_text='Username',
                                                 manager=manager)
         
-        password_field = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((self.width/2 - 300/2, 185 + 75), (300, 50)),
+        password_field = UITextEntryLine(relative_rect=pygame.Rect((self.width/2 - 300/2, 185 + 75), (300, 50)),
                                                 placeholder_text='Password',
                                                 manager=manager)
         password_field.set_text_hidden()
         
-        login_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((self.width/2 - 300/2, 185 + 75 + 75), (100, 50)),
+        login_button = UIButton(relative_rect=pygame.Rect((self.width/2 - 300/2, 185 + 75 + 75 + 30), (100, 50)),
                                                 text='Login',
                                                 manager=manager)
-
+        
+        error_label = UILabel(relative_rect=pygame.Rect((self.width/2 - 250/2, 185 + 75 + 75 + 30 + 75), (250, 50)),
+                                                text='',
+                                                object_id=ObjectID(class_id='@errors',
+                                                                   object_id='#error_message'))
+        
         clock = pygame.time.Clock()
         is_running = True
-
-        username = None
-        password = None
 
         while is_running:
             time_delta = clock.tick(60)/1000.0
@@ -49,8 +63,15 @@ class LoginScreen(Screen):
                     if event.ui_element == login_button:
                         username = username_field.get_text() 
                         password = password_field.get_text()
-                        self.data['username'] = username 
-                        return 'main'
+                        
+                        if validate_field(username) and validate_field(password):
+                            self.data['username'] = username 
+                            return 'main'
+                        
+                        else:
+                            error_label.set_text('Username or Password is empty!')
+                            params = { 'time_per_letter': 0.05 }
+                            error_label.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR, params)
 
                 manager.process_events(event)
 

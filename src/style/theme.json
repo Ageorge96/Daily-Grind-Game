@@ -38,5 +38,24 @@
          {
              "padding": "10,10"
          }
+    },
+
+    "#error_message":
+    {
+       "colours":
+         {
+             "normal_text": "#ff0000"
+         },
+
+        "font":
+        {
+            "name": "robotomono",
+            "size": "14",
+            "regular_resource": {
+                 "package": "resources.fonts",
+                 "resource": "RobotoMono-Regular.ttf"
+            }
+        }
+
     }
 }
