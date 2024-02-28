@@ -12,7 +12,7 @@ class LoginScreen(Screen):
         background = pygame.Surface((self.width, self.height))
         background.fill(pygame.Color('#ffffff'))
 
-        manager = pygame_gui.UIManager((self.width, self.height))
+        manager = pygame_gui.UIManager((self.width, self.height), self.theme)
         
         font = pygame.font.Font('freesansbold.ttf', 40)
         text = font.render(f"The Daily Grind", True, (0,0,0))

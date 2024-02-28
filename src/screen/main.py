@@ -16,7 +16,7 @@ class MainScreen(Screen):
         text = font.render(f"Welcome, {self.data['username']}!", True, (255,255,255))
         text_rect = text.get_rect(center=(self.width/2, self.height/2))
         
-        manager = pygame_gui.UIManager((self.width, self.height))
+        manager = pygame_gui.UIManager((self.width, self.height), self.theme)
 
         clock = pygame.time.Clock()
         is_running = True
