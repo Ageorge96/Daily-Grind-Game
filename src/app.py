@@ -11,9 +11,8 @@ run = True
 while run:
     response = currentScreen.render()
     if response == 'main':
-        data = currentScreen.data
+        Main.data = currentScreen.data
         currentScreen = Main
-        currentScreen.data = data
     
     elif response == 'stop':
         run = False
