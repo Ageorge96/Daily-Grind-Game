@@ -37,7 +37,7 @@ player_width *= scale_factor
 player_height *= scale_factor
 
 # Hurdle properties
-hurdle_width, hurdle_height = 50, 110  # Increase the height of the hurdle slightly
+hurdle_width, hurdle_height = 80, 150  # Increase width and height of the hurdles
 hurdle_spacing = 180  # Increase the spacing between hurdles
 hurdle_vel = 20
 last_speed_increase_time = pygame.time.get_ticks()  # Initialize last_speed_increase_time
@@ -50,13 +50,24 @@ start_time = pygame.time.get_ticks()
 current_speed = 15  # Initial speed
 
 # Cone properties
-cone_width, cone_height = 110, 110  # Increase the size of the cone
+cone_width, cone_height = 180, 110  # Increase the size of the cone
 cone_x = wid
 cone_y = hei - cone_height  # Position hurdles at the bottom of the screen
+
+# Background properties
+background_image = pygame.image.load(os.path.join(current_path, 'static', 'assets', 'Background', 'running_track.png')).convert_alpha()
+background_rect = background_image.get_rect()
+
+# Scale the background image to fit the screen
+background_image = pygame.transform.scale(background_image, (wid, hei))
 
 # Initial player position
 player_x = 50
 player_y = hei - player_height  # Start the player at the bottom of the screen
+
+# Hurdle image
+hurdle_image = pygame.image.load(os.path.join(current_path, 'static', 'assets', 'Hurdles', 'Traffic_Cone.png')).convert_alpha()
+hurdle_image = pygame.transform.scale(hurdle_image, (hurdle_width, hurdle_height))
 
 # Main game loop
 clock = pygame.time.Clock()
@@ -64,14 +75,10 @@ clock = pygame.time.Clock()
 class Hurdle:
     def __init__(self, x):  
         self.x = x
-        self.y = hei - cone_height  # Position the hurdle at the bottom of the screen
+        self.y = hei - hurdle_height  # Position the hurdle at the bottom of the screen
 
     def draw(self):
-        screen.blit(cone_image, (self.x, self.y))
-
-
-    def draw(self):
-        screen.blit(cone_image, (self.x, self.y))
+        screen.blit(hurdle_image, (self.x, self.y))
 
 def jump():
     global player_y, is_jumping, jump_count
@@ -125,10 +132,7 @@ def increase_hurdle_speed():
         hurdle_vel += 1  # Increase speed
         last_speed_increase_time = current_time
 
-# Load cone image
-cone_image = pygame.image.load(os.path.join(current_path, 'static', 'assets', 'Hurdles', 'Traffic_Cone.png')).convert_alpha()
-cone_image = pygame.transform.scale(cone_image, (cone_width, cone_height))
-
+# Main game loop
 running = True
 hurdles = []
 
@@ -155,10 +159,14 @@ while running:
     # Increase hurdle speed over time
     increase_hurdle_speed()
 
-    # Draw everything
+    # Draw background
     screen.fill(WHITE)
+    screen.blit(background_image, (0, 0))  # Set y-coordinate to 0 to start background from the top of the screen
+
+    # Draw everything
     for hurdle in hurdles:
         hurdle.draw()
+
     # Draw the player
     scaled_player_image = pygame.transform.scale(player_images[current_image_index], (player_width, player_height))
     screen.blit(scaled_player_image, (player_x, player_y))
