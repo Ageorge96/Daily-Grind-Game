@@ -43,13 +43,14 @@ class LoginScreen(Screen):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     is_running = False
+                    return 'stop'
                 
                 if event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_element == login_button:
                         username = username_field.get_text() 
                         password = password_field.get_text()
                         self.data['username'] = username 
-                        return 'second'
+                        return 'main'
 
                 manager.process_events(event)
 

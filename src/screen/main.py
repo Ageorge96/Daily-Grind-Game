@@ -26,6 +26,7 @@ class MainScreen(Screen):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     is_running = False
+                    return 'stop'
 
                 manager.process_events(event)
 
