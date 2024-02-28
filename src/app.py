@@ -1,18 +1,13 @@
-import lib.screen
-import screen.main
-import screen.second
-import types
+from screen.login import LoginScreen
+from screen.main import MainScreen
 
-Main = lib.screen.Screen(1000, 650)
-Main.render = types.MethodType(screen.main.render, Main)
+Login = LoginScreen(1000, 650)
+Main = MainScreen(1000, 650)
 
-Second = lib.screen.Screen(1000, 650)
-Second.render = types.MethodType(screen.second.render, Second)
-
-currentScreen = Main
+currentScreen = Login
 
 if currentScreen.render() == 'second':
     data = currentScreen.data
-    currentScreen = Second
+    currentScreen = Main
     currentScreen.data = data
     currentScreen.render()
