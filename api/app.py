@@ -58,8 +58,6 @@ def user_signup():
             response = {'message': 'Account sucessfully created'}
             return Response(json.dumps(response), status=200, mimetype='application/json')
          
-        
-    
 @app.route('/user/logout', methods=['GET'])
 def user_logout():
     session.pop('token', None)
