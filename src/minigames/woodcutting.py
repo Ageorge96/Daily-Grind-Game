@@ -23,7 +23,13 @@ class WoodcuttingScreen(Screen):
         # Colors
         WHITE = (255, 255, 255)
         BLACK = (0, 0, 0)
-        STRENGTH_THEME = (227, 62, 7)
+        STRENGTH_THEME = (179, 0, 0)
+
+        # Sound
+        chop = pygame.mixer.Sound('./assets/chopping-wood.mp3')
+        chop_2 = pygame.mixer.Sound('./assets/chopping_sound_2.mp3')
+        tree_falling = pygame.mixer.Sound('./assets/timber.mp3')
+        
 
         # test components
         text_font = pygame.font.Font(None, 36)
@@ -69,6 +75,50 @@ class WoodcuttingScreen(Screen):
         def is_button_clicked(mouse_pos, clickable_pos):
             return clickable_pos.collidepoint(mouse_pos)
 
+        # splash = True
+        # while splash:
+
+        def display_splash_screen():
+            screen.fill(STRENGTH_THEME)
+
+            # Set title
+            splash_title_font = pygame.font.Font(None, 48)
+            splash_title_text = splash_title_font.render("Welcome to Woodcutting!", True, WHITE)
+
+            # Set instructions
+            splash_instruction_font = pygame.font.Font(None, 36)
+            splash_instruction_text = splash_instruction_font.render("Click on the axe icon to cut down the trees.\n     Each tree takes 5 hits. 1 tree == 1 point", True, WHITE)
+
+            # Set start game button
+            button_rect = pygame.Rect((self.width // 2 - BUTTON_WIDTH // 2, self.height // 2 + 100), (BUTTON_WIDTH, BUTTON_HEIGHT))
+            button_text = splash_title_font.render("Start Game", True, STRENGTH_THEME)
+            button_instruction_font = pygame.font.Font(None, 14)
+            button_instruction_text = button_instruction_font.render('(Click here to start game)', True, STRENGTH_THEME)
+
+
+            screen.blit(splash_title_text, (self.width // 2 - splash_title_text.get_width() // 2, self.height // 4))
+            screen.blit(splash_instruction_text, (self.width // 2 - splash_title_text.get_width() // 1.65, self.height // 2.25))
+            pygame.draw.rect(screen, WHITE, button_rect)
+            screen.blit(button_text, (button_rect.centerx - button_text.get_width() // 2, button_rect.centery - button_text.get_height() // 2))
+            screen.blit(button_instruction_text, (button_rect.centerx - button_instruction_text.get_width() // 2, button_rect.centery + 13))
+            pygame.display.flip()
+
+            
+
+            # Wait for the user to click the button
+            button_clicked = False
+            while not button_clicked:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        mouse_pos = pygame.mouse.get_pos()
+                        if is_button_clicked(mouse_pos, button_rect):
+                            button_clicked = True
+
+        display_splash_screen()
+
         # Main game loop
         running = True
         while running:
@@ -87,10 +137,12 @@ class WoodcuttingScreen(Screen):
                         print(self.chop)
                         if self.chop == 0:
                             print("TIMBER!!")
+                            tree_falling.play()
                             self.score += 1
                             self.reset_tree()
                         else:
                             print("Chop!")
+                            chop_2.play()
                             self.chop -= 1
 
 
@@ -113,6 +165,11 @@ class WoodcuttingScreen(Screen):
             # Cap the frame rate
             pygame.time.Clock().tick(60)
 
+
+            if self.score == 10:
+                return 'main'
+
+
         # Quit Pygame
         pygame.quit()
         sys.exit()
@@ -120,5 +177,3 @@ class WoodcuttingScreen(Screen):
     def reset_tree(self):
         self.selected_tree = None
         self.chop = 5
-
-    
