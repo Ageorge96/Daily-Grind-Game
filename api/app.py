@@ -2,6 +2,7 @@ from flask import Flask, request, Response, session
 from lib.user_repository import UserRepository
 from lib.user import User
 from lib.db import get_flask_database_connection
+from lib.question_repository import QuestionRepository
 
 import json
 import secrets
@@ -65,3 +66,11 @@ def user_logout():
         
 
 #if 'token' in session
+
+# routes for quiz functionality
+@app.route('/quizgame', methods=['GET'])
+def get_quiz():
+    connection = get_flask_database_connection(app)
+    repository = QuestionRepository()
+    questions = repository.find()
+    return Response(status=200) 
