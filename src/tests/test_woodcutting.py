@@ -1,4 +1,5 @@
-from minigames.woodcutting import *
+# from minigames.woodcutting import *
+from minigames.woodcutting import WoodcuttingScreen
 
 
 def test_game_running():

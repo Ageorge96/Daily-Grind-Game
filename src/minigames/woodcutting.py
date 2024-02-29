@@ -26,7 +26,6 @@ class WoodcuttingScreen(Screen):
         STRENGTH_THEME = (179, 0, 0)
 
         # Sound
-        chop = pygame.mixer.Sound('./assets/chopping-wood.mp3')
         chop_2 = pygame.mixer.Sound('./assets/chopping_sound_2.mp3')
         tree_falling = pygame.mixer.Sound('./assets/timber.mp3')
         
