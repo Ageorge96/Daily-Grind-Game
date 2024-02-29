@@ -37,7 +37,7 @@ player_width *= scale_factor
 player_height *= scale_factor
 
 # Hurdle properties
-hurdle_width, hurdle_height = 80, 150  # Increase width and height of the hurdles
+hurdle_width, hurdle_height = 125, 140  # Increase width and height of the hurdles
 hurdle_spacing = 180  # Increase the spacing between hurdles
 hurdle_vel = 20
 last_speed_increase_time = pygame.time.get_ticks()  # Initialize last_speed_increase_time
