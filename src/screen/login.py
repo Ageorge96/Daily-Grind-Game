@@ -1,9 +1,12 @@
 import pygame
 import pygame_gui
+import requests, json
 
 from screen.screen import Screen
 from pygame_gui.elements import UIButton, UITextEntryLine, UILabel
 from pygame_gui.core import ObjectID
+from lib.user import User
+from lib.timer import Timer
 
 def validate_field(text):
     if text != '' and text != None:
@@ -11,8 +14,26 @@ def validate_field(text):
     else:
         return False
     
-def validate_password(password):
-    pass
+def validate_login(username, password, error_label):
+    if validate_field(password) and validate_field(username):
+        url = 'http://127.0.0.1:5000/user/login'
+        payload = {'username': username, 'password': password}
+
+        response = requests.post(url, payload)
+        
+        if response.status_code == 200:
+            return (True, json.loads(response.text))
+        
+        else:
+            error_label.set_text('Username or password is incorrect!')
+            params = { 'time_per_letter': 0.05 }
+            error_label.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR, params)
+    
+             
+    else:
+        error_label.set_text('Username or password is empty!')
+        params = { 'time_per_letter': 0.05 }
+        error_label.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR, params)
 
 class LoginScreen(Screen):
     def render(self):
@@ -44,7 +65,7 @@ class LoginScreen(Screen):
                                                 text='Login',
                                                 manager=manager)
         
-        error_label = UILabel(relative_rect=pygame.Rect((self.width/2 - 250/2, 185 + 75 + 75 + 30 + 75), (250, 50)),
+        error_label = UILabel(relative_rect=pygame.Rect((self.width/2 - 275/2, 185 + 75 + 75 + 30 + 75), (275, 50)),
                                                 text='',
                                                 object_id=ObjectID(class_id='@errors',
                                                                    object_id='#error_message'))
@@ -52,8 +73,16 @@ class LoginScreen(Screen):
         clock = pygame.time.Clock()
         is_running = True
 
+        timer = Timer(0,0, manager)
+        timer.start(0.2)
+
         while is_running:
+            if not timer.status:
+                return 'stop'
+            
             time_delta = clock.tick(60)/1000.0
+         
+            timer.display()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     is_running = False
@@ -64,14 +93,11 @@ class LoginScreen(Screen):
                         username = username_field.get_text() 
                         password = password_field.get_text()
                         
-                        if validate_field(username) and validate_field(password):
-                            self.data['username'] = username 
-                            return 'main'
+                        result = validate_login(username, password, error_label)
                         
-                        else:
-                            error_label.set_text('Username or Password is empty!')
-                            params = { 'time_per_letter': 0.05 }
-                            error_label.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR, params)
+                        if result:
+                            self.data['user'] = User(result[1]['id'], result[1]['username'], result[1]['email'], result[1]['token'])
+                            return 'main'
 
                 manager.process_events(event)
 
