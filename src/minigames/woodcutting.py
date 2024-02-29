@@ -56,10 +56,18 @@ class WoodcuttingScreen(Screen):
             cutting_rect = cutting_surface.get_rect(center = tree_postion[self.selected_tree])
 
             return cutting_surface, cutting_rect
+        
+        def display_scoreboard():
+            scoreboard = pygame.Surface((200, 60)) 
+            scoreboard.set_alpha(200)               
+            scoreboard.fill(STRENGTH_THEME)      
+            score = pygame.font.Font(None, 36)
+            score_surface = score.render(f"Trees Cut: {self.score}", True, BLACK) 
+            scoreboard.blit(score_surface, (20, 18))
+            screen.blit(scoreboard, (self.width - 200, 10))
 
-        def is_button_clicked(mouse_pos, button_pos):
-            button_rect = pygame.Rect(button_pos, (70, 70))
-            return button_rect.collidepoint(mouse_pos)
+        def is_button_clicked(mouse_pos, clickable_pos):
+            return clickable_pos.collidepoint(mouse_pos)
 
         # Main game loop
         running = True
@@ -74,7 +82,7 @@ class WoodcuttingScreen(Screen):
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
 
-                    if is_button_clicked(mouse_pos, tree_postion[self.selected_tree]):
+                    if is_button_clicked(mouse_pos, cutting_rect):
                         
                         print(self.chop)
                         if self.chop == 0:
@@ -97,14 +105,7 @@ class WoodcuttingScreen(Screen):
             display_cutting_clickable()
 
 
-            scoreboard = pygame.Surface((200, 60)) 
-            scoreboard.set_alpha(200)               
-            scoreboard.fill(STRENGTH_THEME)      
-            scoreboard_rect: pygame.Rect = scoreboard.get_rect()  
-            score = pygame.font.Font(None, 36)
-            score_surface = score.render(f"Trees Cut: {self.score}", True, BLACK) 
-            scoreboard.blit(score_surface, (20, 18))
-            screen.blit(scoreboard, (self.width - 200, 10))
+            display_scoreboard()
 
             # Update the display
             pygame.display.flip()
@@ -117,5 +118,7 @@ class WoodcuttingScreen(Screen):
         sys.exit()
 
     def reset_tree(self):
-            self.selected_tree = None
-            self.chop = 5
+        self.selected_tree = None
+        self.chop = 5
+
+    
