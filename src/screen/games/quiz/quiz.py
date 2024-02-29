@@ -3,31 +3,13 @@ import pygame
 import random
 import pygame_gui
 import time
+import requests, json
 # import asyncio
 from screen.screen import Screen
 from pygame_gui.elements import UIButton, UITextEntryLine, UILabel, UITextBox
 from pygame_gui.core import ObjectID
 from screen.games.quiz.button import Button
 from screen.games.quiz.score import Score
-
-
-question_selection = [
-            {
-                "question": "What is the capital of France?",
-                "options": ["Paris", "London", "Berlin", "Rome"],
-                "correct_answer": "Paris"
-            },
-            {
-                "question": "Which planet is known as the Red Planet?",
-                "options": ["Mars", "Jupiter", "Venus", "Mercury"],
-                "correct_answer": "Mars"
-            },
-        ]
-questions_length = len(question_selection)
-question_index = random.randint(0,questions_length-1)
-
-# random sample
-
 
 def choose_quesiton():
     question_to_use = question_selection[question_index]
@@ -46,7 +28,33 @@ def correct_answer():
 
 # define score:
 
+class QuestionRetrieval():
 
+    def determine_randomness(self):
+        url = 'http://127.0.0.1:5000/questionrange'  
+        response = requests.get(url)
+        if response.status_code == 200:
+            range_of_random = response.json()
+            number = range_of_random['number']
+            return number
+        else:
+            print("Failed to fetch questions:", response.text)
+
+
+    
+
+questions = QuestionRetrieval()
+questions_length = questions.determine_randomness()
+question_index = random.randint(0,questions_length)
+
+def fetch_questions(self, id):
+    url = 'http://127.0.0.1:5000/quizgame'  
+    response = requests.get(url)
+    if response.status_code == 200:
+        questions = response.json()
+        print(questions)
+    else:
+        print("Failed to fetch questions:", response.text)
 
 
 
@@ -57,11 +65,8 @@ class QuizGame(Screen):
         pygame.display.set_caption('Test Your Intellect...')
         window_surface = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
         # background = pygame.Surface((self.width, self.height))
-        
 
-        
-
-        snail_surface = pygame.image.load('assets/snail_image.jpg')
+        snail_surface = pygame.image.load('src/assets/snail_image.jpg')
         snail_surface = pygame.transform.scale(snail_surface, (70,70))
 
 
@@ -77,21 +82,27 @@ class QuizGame(Screen):
             """ choose font for questions and answers """
 
             #  defining questions and answers
-            question = choose_quesiton()
+            # number_range = 
+            # print("json number", number)
+            questions = fetch_questions(question_index)
             answer_list = answers()
+
+            
+
+           
             
             score_keeper = "£" + str(score.game_score)
-            pot_of_gold_surface = pygame.image.load('assets/pot_of_gold.png')
+            pot_of_gold_surface = pygame.image.load('src/assets/pot_of_gold.png')
             pot_of_gold_surface = pygame.transform.scale(pot_of_gold_surface, (150,150))
             pot_of_gold_rect = pot_of_gold_surface.get_rect(bottomright=(950, 625))
 
             # defining question
-            font = pygame.font.Font('resources/fonts/RobotoMono-Regular.ttf', 40)
-            text = font.render(question, True, (0,0,0)) 
+            font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 40)
+            text = font.render(question, True, (255, 255, 255)) 
             text_rect = text.get_rect(center=(self.width/2, 120))
 
-            score_font = pygame.font.Font('resources/fonts/RobotoMono-Regular.ttf', 20)
-            score_text = score_font.render(score_keeper, True, (0, 0, 0))
+            score_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 20)
+            score_text = score_font.render(score_keeper, True, (255, 255, 255))
             score_text_rect = score_text.get_rect(bottomright=(875, 560))
 
             # create button instances       
@@ -103,7 +114,7 @@ class QuizGame(Screen):
                 button_capture.append(pygame.Rect(400, top_pixels[idx], 200, 50))
         
             """ define images/ surfaces to be used on this page """
-            background_surface = pygame.image.load('assets/intellect/istockphoto-1185747322-612x612.jpg')
+            background_surface = pygame.image.load('src/assets/intellect/istockphoto-1185747322-612x612.jpg')
             background_surface = pygame.transform.scale(background_surface, (1000,650))
 
             time_delta = clock.tick(60)/1000.0

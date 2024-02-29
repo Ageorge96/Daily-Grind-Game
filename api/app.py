@@ -1,8 +1,9 @@
-from flask import Flask, request, Response, session
+from flask import Flask, request, Response, session, jsonify
 from lib.user_repository import UserRepository
 from lib.user import User
 from lib.db import get_flask_database_connection
 from lib.question_repository import QuestionRepository
+from lib.question import Question
 
 import json
 import secrets
@@ -68,9 +69,22 @@ def user_logout():
 #if 'token' in session
 
 # routes for quiz functionality
-@app.route('/quizgame', methods=['GET'])
-def get_quiz():
+@app.route('/questionrange', methods=['GET'])
+def get_quiz_range():
     connection = get_flask_database_connection(app)
-    repository = QuestionRepository()
-    questions = repository.find()
-    return Response(status=200) 
+    repository = QuestionRepository(connection)
+    question_range = repository.determine_range()
+    if question_range:
+        return jsonify({"number": question_range})
+    else:
+        return jsonify({"error": "No question found"})
+
+@app.route('/quizgame', methods=['GET'])
+def get_quiz_questions():
+    connection = get_flask_database_connection(app)
+    repository = QuestionRepository(connection)
+    question_dict = repository.find(id)
+    if question_dict:
+        return jsonify(question_dict.to_dict())
+    else:
+        return jsonify({"error": "No question found"})
