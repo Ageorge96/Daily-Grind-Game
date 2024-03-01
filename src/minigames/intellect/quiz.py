@@ -92,7 +92,7 @@ class QuizGame(Screen):
 
             # Set instructions
             splash_instruction_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 25)
-            splash_instruction_text = splash_instruction_font.render("Collect 5 points for every correct answer.\n Lose 7 points for each incorrect answer.", True, WHITE)
+            splash_instruction_text = splash_instruction_font.render("Collect 5 points for every correct answer.\n Lose 7 points for each incorrect answer.\n       Choose your answers wisely!", True, WHITE)
 
             # Set start game button
             button_rect = pygame.Rect((self.width // 2 - BUTTON_WIDTH // 2, self.height // 2 + 100), (BUTTON_WIDTH, BUTTON_HEIGHT))
