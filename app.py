@@ -4,6 +4,7 @@ import os
 import random
 
 # Initialize Pygame
+pygame.mixer.pre_init(44100, -16, 2, 512)  # Adjust parameters for better MP3 support
 pygame.init()
 
 # Set up the game window
@@ -13,6 +14,7 @@ pygame.display.set_caption("Track and Field Game")
 
 # Colors
 WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 
 # Player properties
 player_width, player_height = 50, 50
@@ -69,6 +71,21 @@ player_y = hei - player_height  # Start the player at the bottom of the screen
 hurdle_image = pygame.image.load(os.path.join(current_path, 'static', 'assets', 'Hurdles', 'Traffic_Cone.png')).convert_alpha()
 hurdle_image = pygame.transform.scale(hurdle_image, (hurdle_width, hurdle_height))
 
+# Load crash and jump sound effects
+crash_sound = pygame.mixer.Sound(os.path.join(current_path, 'static', 'assets', 'sounds', 'crash.wav'))
+jump_sound = pygame.mixer.Sound(os.path.join(current_path, 'static', 'assets', 'sounds', 'jump.wav'))
+
+# Scoreboard properties
+score = 0
+score_font = pygame.font.Font(None, 36)
+
+# Load background music
+background_music_file = os.path.join(current_path, 'static', 'assets', 'sounds', 'background.wav')
+pygame.mixer.music.load(background_music_file)
+
+# Start playing background music
+pygame.mixer.music.play(-1)  # Set -1 to loop indefinitely
+
 # Main game loop
 clock = pygame.time.Clock()
 
@@ -85,6 +102,7 @@ def jump():
     if not is_jumping:
         is_jumping = True
         jump_count = 10
+        jump_sound.play()  # Play jump sound effect
 
 def move_player():
     global player_x, player_y, is_jumping, jump_count
@@ -95,6 +113,7 @@ def move_player():
         player_x += player_vel
     if keys[pygame.K_SPACE]:
         jump()
+
     if is_jumping:
         if jump_count >= -10:
             neg = 1
@@ -132,6 +151,10 @@ def increase_hurdle_speed():
         hurdle_vel += 1  # Increase speed
         last_speed_increase_time = current_time
 
+def display_score():
+    score_text = score_font.render("Score: " + str(score), True, WHITE)
+    screen.blit(score_text, (wid - 150, 20))
+
 # Main game loop
 running = True
 hurdles = []
@@ -148,6 +171,8 @@ while running:
     if check_collision(hurdles):
         print("Collision detected! Game Over")
         running = False  # Game over
+        pygame.mixer.music.stop()  # Stop background music
+        crash_sound.play()  # Play crash sound effect
 
     # Move hurdles
     move_hurdles(hurdles)
@@ -170,6 +195,9 @@ while running:
     # Draw the player
     scaled_player_image = pygame.transform.scale(player_images[current_image_index], (player_width, player_height))
     screen.blit(scaled_player_image, (player_x, player_y))
+
+    # Display the scoreboard
+    display_score()
 
     # Update current player image index for animation
     current_image_index = (current_image_index + 1) % len(player_images)
