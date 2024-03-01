@@ -9,7 +9,7 @@ route_questions = Blueprint('route_questions', __name__)
 # routes for quiz functionality
 @route_questions.route('/questionrange', methods=['GET'])
 def get_quiz_range():
-    connection = get_flask_database_connection(app)
+    connection = get_flask_database_connection(route_questions)
     repository = QuestionRepository(connection)
     question_range = repository.determine_range()
     if question_range:
@@ -20,7 +20,7 @@ def get_quiz_range():
 @route_questions.route('/quizgame', methods=['GET'])
 def get_quiz_questions():
     id = request.args.get('id')
-    connection = get_flask_database_connection(app)
+    connection = get_flask_database_connection(route_questions)
     repository = QuestionRepository(connection)
     question_dict = repository.find(id)
     if question_dict:
