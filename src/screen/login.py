@@ -30,7 +30,7 @@ def validate_login(username, password, error_label):
     
              
     else:
-        error_label.set_text('Username or password is empty!')
+        error_label.set_text('One of the fields is empty!')
         params = { 'time_per_letter': 0.05 }
         error_label.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR, params)
 
