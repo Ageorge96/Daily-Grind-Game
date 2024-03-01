@@ -15,6 +15,7 @@ pygame.display.set_caption("Track and Field Game")
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+text_font = pygame.font.SysFont("Arial",42)
 
 # Player properties
 player_width, player_height = 50, 50
@@ -151,9 +152,11 @@ def increase_hurdle_speed():
         hurdle_vel += 1  # Increase speed
         last_speed_increase_time = current_time
 
-def display_score():
-    score_text = score_font.render("Score: " + str(score), True, WHITE)
-    screen.blit(score_text, (wid - 150, 20))
+def draw_text(text, font, text_col):
+    text_surface = font.render(text, True, text_col)
+    text_rect = text_surface.get_rect()
+    text_rect.center = (wid//2, hei//2)
+    screen.blit(text_surface, text_rect)
 
 # Main game loop
 running = True
@@ -163,10 +166,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+    
     # Move player
     move_player()
-
     # Check for jumping and collision
     if check_collision(hurdles):
         print("Collision detected! Game Over")
@@ -187,6 +189,7 @@ while running:
     # Draw background
     screen.fill(WHITE)
     screen.blit(background_image, (0, 0))  # Set y-coordinate to 0 to start background from the top of the screen
+    draw_text("Track & Field Game",text_font,(255,0,0))
 
     # Draw everything
     for hurdle in hurdles:
@@ -195,9 +198,6 @@ while running:
     # Draw the player
     scaled_player_image = pygame.transform.scale(player_images[current_image_index], (player_width, player_height))
     screen.blit(scaled_player_image, (player_x, player_y))
-
-    # Display the scoreboard
-    display_score()
 
     # Update current player image index for animation
     current_image_index = (current_image_index + 1) % len(player_images)
