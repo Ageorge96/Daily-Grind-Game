@@ -4,12 +4,16 @@ import random
 import pygame_gui
 import time
 import requests, json
+import sys
 # import asyncio
 from screen.screen import Screen
 from pygame_gui.elements import UIButton, UITextEntryLine, UILabel, UITextBox
 from pygame_gui.core import ObjectID
 from minigames.intellect.score import Score
 from lib.timer import Timer
+
+
+
 
 
 class QuestionRetrieval():
@@ -48,6 +52,15 @@ class QuizGame(Screen):
         window_surface = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
         # background = pygame.Surface((self.width, self.height))
 
+        # Colors
+        WHITE = (255, 255, 255)
+        BLACK = (0, 0, 0)
+        INTELLECT_THEME = (0, 160, 0)
+
+        # Button dimensions
+        BUTTON_WIDTH = 500
+        BUTTON_HEIGHT = 80
+
         snail_surface = pygame.image.load('src/assets/snail_image.jpg')
         snail_surface = pygame.transform.scale(snail_surface, (70,70))
 
@@ -58,19 +71,56 @@ class QuizGame(Screen):
         speech_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 15)
         speech_text = speech_font.render("Time's Up!", True, (0, 0, 0))
         
-        
+        is_running = True
         snail_x_pos = 0
         clock = pygame.time.Clock()
-        is_running = True
         self.question = None
         score = Score()
 
         manager = pygame_gui.UIManager((self.width, self.height), self.theme)
-        
+
         # displaying timer
         timer = Timer(0, 5, manager)
         timer.start(0.66)
 
+        def is_button_clicked(mouse_pos, clickable_pos):
+            return clickable_pos.collidepoint(mouse_pos)
+
+        def display_splash_screen():
+            window_surface.fill(INTELLECT_THEME)
+
+            # Set title
+            splash_title_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 40)
+            splash_title_font.set_bold(True)
+            splash_title_text = splash_title_font.render("Welcome to the Quiz!", True, WHITE)
+
+            # Set instructions
+            splash_instruction_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 30)
+            splash_instruction_text = splash_instruction_font.render("Collect 5 points for every correct answer.\n Lose 7 points for each incorrect answer.", True, WHITE)
+
+            # Set start game button
+            button_rect = pygame.Rect((self.width // 2 - BUTTON_WIDTH // 2, self.height // 2 + 100), (BUTTON_WIDTH, BUTTON_HEIGHT))
+            button_text = splash_title_font.render("Start Game", True, INTELLECT_THEME)
+            button_instruction_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 12)
+            button_instruction_text = button_instruction_font.render('(Click here to start game)', True, INTELLECT_THEME)
+
+            window_surface.blit(splash_title_text, (self.width // 2 - splash_title_text.get_width() // 2, self.height // 4))
+            window_surface.blit(splash_instruction_text, (self.width // 2 - splash_title_text.get_width() // 1.65, self.height // 2.25))
+            pygame.draw.rect(window_surface, WHITE, button_rect)
+            window_surface.blit(button_text, (button_rect.centerx - button_text.get_width() // 2, button_rect.centery - button_text.get_height() // 2))
+            window_surface.blit(button_instruction_text, (button_rect.centerx - button_instruction_text.get_width() // 1.5, button_rect.centery + 13))
+            pygame.display.flip()
+
+
+            button_clicked = False
+            while not button_clicked:
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        mouse_pos = pygame.mouse.get_pos()
+                        if is_button_clicked(mouse_pos, button_rect):
+                            button_clicked = True
+
+        display_splash_screen()
 
         # while loop defined to initiate question refresh and timed game
         while is_running:
@@ -132,14 +182,12 @@ class QuizGame(Screen):
                                     score.remove_points()
                                     self.question = None
 
-            if event.type == pygame.QUIT:
-                is_running = False
-                return 'stop'
+                if event.type == pygame.QUIT:
+                    is_running = False
+                    return 'stop'
                 
             if not timer.status:
                 snail_x_pos += 0
-                # snail_speech_surface_rect = snail_speech_surface.get_rect(600, 800)
-                # speech_text_rect = speech_text.get_rect(600, 800)
                 window_surface.blit(snail_speech_surface, ((snail_x_pos, 450)))
                 window_surface.blit(speech_text, ((snail_x_pos+28, 480)))
             else:
