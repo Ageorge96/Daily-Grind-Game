@@ -1,8 +1,12 @@
 import pygame
 import threading
 from time import sleep
+from lib.timer import Timer
+import pygame_gui
 
 pygame.init()
+manager = pygame_gui.UIManager((800, 600))
+
 
 # Set up the screen
 screen_width = 1000  # example width
@@ -54,9 +58,12 @@ countdown_thread.start()
 
 
 running = True
+timer = Timer(0,0,manager)
+timer.start(1)
 while running:
+    timer.display()
     screen.blit(background_racetrack_image, (0, 0))
-    screen.blit(clock_image, (0, 10))
+    #screen.blit(clock_image, (0, 10))
     display_timer_on_screen(screen, my_timer)
     if my_timer <= 0:
         display_game_finished_on_screen(screen)
@@ -66,6 +73,13 @@ while running:
             running = False
         elif event.type == pygame.USEREVENT:
             running = False  
+    manager.draw_ui(screen)
 
+
+
+
+
+
+  
     pygame.display.flip()  
 
