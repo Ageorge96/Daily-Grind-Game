@@ -4,12 +4,25 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+
 django = "==5.0.2"
-pygame = "==2.5.2"
 pymongo = "==4.6.2"
 python-dotenv = "==1.0.1"
+
+flask = "*"
+requests = "*"
+websocket-client = "*"
+websockets = "*"
+pygame = "*"
+flask-socketio = "*"
+pywebview = "*"
+flask-cors = "*"
+flask-restful = "*"
 
 [dev-packages]
 
 [requires]
+
 python_version = "3.11"
+
+
