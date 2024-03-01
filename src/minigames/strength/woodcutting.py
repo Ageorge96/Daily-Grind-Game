@@ -4,6 +4,7 @@ import random
 import sys
 
 from screen.screen import Screen
+from lib.timer import Timer
 
 class WoodcuttingScreen(Screen):
 
@@ -28,6 +29,9 @@ class WoodcuttingScreen(Screen):
         # Sound
         chop_2 = pygame.mixer.Sound('./assets/chopping_sound_2.mp3')
         tree_falling = pygame.mixer.Sound('./assets/timber.mp3')
+
+        # Set Gui Manager
+        manager = pygame_gui.UIManager((self.width, self.height), self.theme)
         
 
         # test components
@@ -74,8 +78,13 @@ class WoodcuttingScreen(Screen):
         def is_button_clicked(mouse_pos, clickable_pos):
             return clickable_pos.collidepoint(mouse_pos)
 
-        # splash = True
-        # while splash:
+        def display_timer():
+            timerboard = pygame.Surface((70, 30)) 
+            timerboard.set_alpha(200)               
+            timerboard.fill(STRENGTH_THEME)      
+            screen.blit(timerboard, (0, 10))
+            manager.update(time_delta)
+            manager.draw_ui(screen)
 
         def display_splash_screen():
             screen.fill(STRENGTH_THEME)
@@ -118,9 +127,22 @@ class WoodcuttingScreen(Screen):
 
         display_splash_screen()
 
+
+        timer = Timer(0, 12, manager)
+        timer.start(0.66)
+
+        clock = pygame.time.Clock()
+
         # Main game loop
         running = True
         while running:
+            if not timer.status:
+                return 'stop'
+            
+            timer.display()
+
+            time_delta = clock.tick(60)/1000.0
+            
             # Handle events
             if self.selected_tree == None:
                 cutting_surface, cutting_rect = set_tree()
@@ -150,7 +172,6 @@ class WoodcuttingScreen(Screen):
 
             # Draw GUI elements
             draw_background(self.width - 20, self.height - 20)
-            screen.blit(text_surface, (400, 200))
 
             # display cutting icon
             display_cutting_clickable()
@@ -158,11 +179,16 @@ class WoodcuttingScreen(Screen):
 
             display_scoreboard()
 
+            display_timer()
+            
+
             # Update the display
             pygame.display.flip()
 
+            
+
             # Cap the frame rate
-            pygame.time.Clock().tick(60)
+            clock.tick(60)
 
 
             if self.score == 10:
