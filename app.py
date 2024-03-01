@@ -2,8 +2,12 @@ import pygame
 import sys
 import os
 import random
-
+from pygame.locals import QUIT
+from websocket import create_connection
+import webview
+import requests
 # Initialize Pygame
+
 pygame.init()
 
 # Set up the game window
@@ -57,6 +61,15 @@ cone_y = hei - cone_height  # Position hurdles at the bottom of the screen
 # Background properties
 background_image = pygame.image.load(os.path.join(current_path, 'static', 'assets', 'Background', 'running_track.png')).convert_alpha()
 background_rect = background_image.get_rect()
+
+# Game over screen properties
+game_over_font = pygame.font.Font(None, 64)
+game_over_text = game_over_font.render("Game Over", True, (255, 0, 0))
+game_over_rect = game_over_text.get_rect(center=(wid // 2, hei // 2 + 50))
+
+exit_button_font = pygame.font.Font(None, 36)
+exit_button_text = exit_button_font.render("Exit", True, (0, 0, 0))
+exit_button_rect = exit_button_text.get_rect(center=(wid // 2, hei // 2 + 150))
 
 # Scale the background image to fit the screen
 background_image = pygame.transform.scale(background_image, (wid, hei))
@@ -115,8 +128,12 @@ def create_hurdle():
     return Hurdle(wid + x_distance)
 
 def move_hurdles(hurdles):
+    global points
     for hurdle in hurdles:
         hurdle.x -= hurdle_vel
+        # Check if the player has successfully jumped over an obstacle
+        if hurdle.x + hurdle_width < player_x and not is_jumping:
+            points += 1
 
 def check_collision(hurdles):
     for hurdle in hurdles:
@@ -132,9 +149,20 @@ def increase_hurdle_speed():
         hurdle_vel += 1  # Increase speed
         last_speed_increase_time = current_time
 
+# Webview component to display React rewards component
+def display_rewards():
+    webview.create_window("Rewards", "http://localhost:5000/rewards", width=400, height=300)
+    webview.start()
+
+points=0
 # Main game loop
 running = True
+game_over = False
 hurdles = []
+points_gained = 0
+
+# Create WebSocket connection
+ws = create_connection("ws://localhost:8000")
 
 while running:
     for event in pygame.event.get():
@@ -142,22 +170,41 @@ while running:
             running = False
 
     # Move player
-    move_player()
+    if not game_over:
+        move_player()
 
-    # Check for jumping and collision
-    if check_collision(hurdles):
-        print("Collision detected! Game Over")
-        running = False  # Game over
+        # Check for jumping and collision
+        if check_collision(hurdles):
+            print("Collision detected! Game Over.")
+            game_over = True  # Game over
+            points_gained = points
+            ws.send("rewards")
+            
+             # Use the requests library to send a POST request to Flask server
+            url = 'http://localhost:5000/rewards'
+            data = {}  # You can include data in the request if needed
+            headers = {}  # You can include headers in the request if needed
 
-    # Move hurdles
-    move_hurdles(hurdles)
+            response = requests.post('http://localhost:5000/rewards', headers={'Content-Type': 'application/json'})
+            print(response.text)
 
-    # Create new hurdles
-    if len(hurdles) == 0 or hurdles[-1].x < wid - hurdle_spacing:  # Distance between hurdles
-        hurdles.append(create_hurdle())
+            # Check the response if needed
+            if response.status_code == 200:
+                print("Request to Flask server successful")
+            else:
+                print(f"Request to Flask server failed with status code {response.status_code}")
 
-    # Increase hurdle speed over time
-    increase_hurdle_speed()
+
+            display_rewards()
+        # Move hurdles
+        move_hurdles(hurdles)
+
+        # Create new hurdles
+        if len(hurdles) == 0 or hurdles[-1].x < wid - hurdle_spacing:  # Distance between hurdles
+            hurdles.append(create_hurdle())
+
+        # Increase hurdle speed over time
+        increase_hurdle_speed()
 
     # Draw background
     screen.fill(WHITE)
@@ -168,17 +215,41 @@ while running:
         hurdle.draw()
 
     # Draw the player
-    scaled_player_image = pygame.transform.scale(player_images[current_image_index], (player_width, player_height))
-    screen.blit(scaled_player_image, (player_x, player_y))
+    if not game_over:
+        scaled_player_image = pygame.transform.scale(player_images[current_image_index], (player_width, player_height))
+        screen.blit(scaled_player_image, (player_x, player_y))
 
-    # Update current player image index for animation
-    current_image_index = (current_image_index + 1) % len(player_images)
+        # Update current player image index for animation
+        current_image_index = (current_image_index + 1) % len(player_images)
+
+    # Display obstacle counter
+    font = pygame.font.Font(None, 36)
+    counter_text = font.render(f"Points: {points}", True, (0, 0, 0))
+    screen.blit(counter_text, (10, 10))
+
+    # Handle events in the game over state
+    if game_over:
+        # Display game over text and exit button
+        screen.blit(game_over_text, game_over_rect)
+        pygame.draw.rect(screen, (255, 255, 255), exit_button_rect)  # Draw a white rectangle
+        screen.blit(exit_button_text, exit_button_rect)
+
+        # Update the display
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if exit_button_rect.collidepoint(x, y):
+                    running = False
 
     # Update the display
     pygame.display.update()
-
-    # Limit frames per second
-    clock.tick(current_speed)
+    clock.tick(30)
+# Close WebSocket connection
+ws.close()
 
 # Quit Pygame
 pygame.quit()

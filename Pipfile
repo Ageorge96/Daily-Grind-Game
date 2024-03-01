@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+requests = "*"
+websocket-client = "*"
+websockets = "*"
+pygame = "*"
+flask-socketio = "*"
+pywebview = "*"
+flask-cors = "*"
+flask-restful = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
