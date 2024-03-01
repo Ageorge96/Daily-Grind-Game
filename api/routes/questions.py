@@ -7,7 +7,7 @@ from lib.question import Question
 route_questions = Blueprint('route_questions', __name__)
 
 # routes for quiz functionality
-@route_stat.route('/questionrange', methods=['GET'])
+@route_questions.route('/questionrange', methods=['GET'])
 def get_quiz_range():
     connection = get_flask_database_connection(app)
     repository = QuestionRepository(connection)
@@ -17,7 +17,7 @@ def get_quiz_range():
     else:
         return jsonify({"error": "No question found"})
 
-@route_stat.route('/quizgame', methods=['GET'])
+@route_questions.route('/quizgame', methods=['GET'])
 def get_quiz_questions():
     id = request.args.get('id')
     connection = get_flask_database_connection(app)
