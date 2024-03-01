@@ -3,3 +3,4 @@ pip==24.0
 pygame==2.5.2
 pymongo==4.6.2
 python-dotenv==1.0.1
+pygame-gui==0.6.9
