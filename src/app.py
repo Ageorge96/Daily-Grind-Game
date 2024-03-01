@@ -1,6 +1,6 @@
 from screen.login import LoginScreen
 from screen.main import MainScreen
-from screen.games.quiz.quiz import QuizGame
+from screen.minigames.intellect.quiz.quiz import QuizGame
 
 Quiz = QuizGame(1000,650)
 Login = LoginScreen(1000, 650)
