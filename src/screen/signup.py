@@ -34,11 +34,11 @@ def validate_login(username, password, error_label):
         params = { 'time_per_letter': 0.05 }
         error_label.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR, params)
 
-class LoginScreen(Screen):
+class SignupScreen(Screen):
     def render(self):
         pygame.init()
 
-        pygame.display.set_caption('The Daily Grind - Login')
+        pygame.display.set_caption('The Daily Grind - Signup')
         window_surface = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
 
         background = pygame.Surface((self.width, self.height))
@@ -47,28 +47,31 @@ class LoginScreen(Screen):
         manager = pygame_gui.UIManager((self.width, self.height), self.theme)
         
         font = pygame.font.Font('resources/fonts/Minecraft-Regular.otf', 46)
-        text = font.render(f"The Daily Grind", True, (255,255,255))
-        text_rect = text.get_rect(center=(self.width/2, 120))
+        text = font.render(f"Create Account", True, (255,255,255))
+        text_rect = text.get_rect(center=(self.width/2, 75))
         
+        email_field = UITextEntryLine(relative_rect=pygame.Rect((self.width/2 - 300/2, 145), (300, 50)),
+                                                placeholder_text='Email',
+                                                manager=manager)
         
-        username_field = UITextEntryLine(relative_rect=pygame.Rect((self.width/2 - 300/2, 185), (300, 50)),
+        username_field = UITextEntryLine(relative_rect=pygame.Rect((self.width/2 - 300/2, 220), (300, 50)),
                                                 placeholder_text='Username',
                                                 manager=manager)
         
-        password_field = UITextEntryLine(relative_rect=pygame.Rect((self.width/2 - 300/2, 260), (300, 50)),
+        password_field = UITextEntryLine(relative_rect=pygame.Rect((self.width/2 - 300/2, 295), (300, 50)),
                                                 placeholder_text='Password',
                                                 manager=manager)
         password_field.set_text_hidden()
         
-        login_button = UIButton(relative_rect=pygame.Rect((self.width/2 - 300/2, 365), (150, 50)),
-                                                text='Login',
-                                                manager=manager)
-        
-        signup_button = UIButton(relative_rect=pygame.Rect((self.width/2, 365), (150, 50)),
+        signup_button = UIButton(relative_rect=pygame.Rect((self.width/2 - 300/2, 390), (150, 50)),
                                                 text='Signup',
                                                 manager=manager)
         
-        error_label = UILabel(relative_rect=pygame.Rect((self.width/2 - 275/2, 440), (275, 50)),
+        cancel_button = UIButton(relative_rect=pygame.Rect((self.width/2, 390), (150, 50)),
+                                                text='Cancel',
+                                                manager=manager)
+    
+        error_label = UILabel(relative_rect=pygame.Rect((self.width/2 - 275/2, 465), (275, 50)),
                                                 text='',
                                                 object_id=ObjectID(class_id='@errors',
                                                                    object_id='#error_message'),
@@ -87,18 +90,10 @@ class LoginScreen(Screen):
                     return 'stop'
                 
                 if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                    if event.ui_element == login_button:
-                        username = username_field.get_text() 
-                        password = password_field.get_text()
-                        
-                        result = validate_login(username, password, error_label)
-                        
-                        if result:
-                            self.data['user'] = User(result[1]['id'], result[1]['username'], result[1]['email'], result[1]['token'])
-                            return 'main'
-                    
-                    elif event.ui_element == signup_button:
-                        return 'signup'
+                    if event.ui_element == signup_button:
+                        pass
+                    elif event.ui_element == cancel_button:
+                        return 'login'
 
                 manager.process_events(event)
 

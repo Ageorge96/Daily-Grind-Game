@@ -2,7 +2,6 @@ import time
 import pygame, pygame_gui
 from pygame_gui.elements import UILabel
 
-
 class Timer:
     def __init__(self, x, y, manager):
         self.start_time = 0
