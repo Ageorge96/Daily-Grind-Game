@@ -8,7 +8,8 @@ import requests, json
 from screen.screen import Screen
 from pygame_gui.elements import UIButton, UITextEntryLine, UILabel, UITextBox
 from pygame_gui.core import ObjectID
-from screen.minigames.intellect.quiz.score import Score
+from minigames.intellect.score import Score
+from lib.timer import Timer
 
 
 class QuestionRetrieval():
@@ -50,20 +51,34 @@ class QuizGame(Screen):
         snail_surface = pygame.image.load('src/assets/snail_image.jpg')
         snail_surface = pygame.transform.scale(snail_surface, (70,70))
 
+        #defining snail speech
+        snail_speech_surface = pygame.image.load('src/assets/intellect/thought_bubble.png')
+        snail_speech_surface = pygame.transform.scale(snail_speech_surface, (150,100))
+
+        speech_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 15)
+        speech_text = speech_font.render("Time's Up!", True, (0, 0, 0))
+        
+        
         snail_x_pos = 0
         clock = pygame.time.Clock()
         is_running = True
         self.question = None
         score = Score()
 
+        manager = pygame_gui.UIManager((self.width, self.height), self.theme)
+        
+        # displaying timer
+        timer = Timer(0, 5, manager)
+        timer.start(0.66)
+
+
         # while loop defined to initiate question refresh and timed game
         while is_running:
-            manager = pygame_gui.UIManager((self.width, self.height), self.theme)
-
+            time_delta = clock.tick(60)/1000.0
+           
             # defining randomness
             questions_length = QuestionRetrieval.determine_randomness()
             question_index = random.randint(1,questions_length)
-
 
             # defining question, options and answers
             if self.question is None:
@@ -80,7 +95,7 @@ class QuizGame(Screen):
             pot_of_gold_rect = pot_of_gold_surface.get_rect(topright=(890, 20))
 
             """ choose font for questions and answers """
-            font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 30)
+            font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 20)
             font.set_bold(True)
             text = font.render(self.question, True, (255, 255, 255)) 
             text_rect = text.get_rect(center=(self.width/2, 120))
@@ -117,9 +132,18 @@ class QuizGame(Screen):
                                     score.remove_points()
                                     self.question = None
 
-                if event.type == pygame.QUIT:
-                    is_running = False
-                    return 'stop'
+            if event.type == pygame.QUIT:
+                is_running = False
+                return 'stop'
+                
+            if not timer.status:
+                snail_x_pos += 0
+                # snail_speech_surface_rect = snail_speech_surface.get_rect(600, 800)
+                # speech_text_rect = speech_text.get_rect(600, 800)
+                window_surface.blit(snail_speech_surface, ((snail_x_pos, 450)))
+                window_surface.blit(speech_text, ((snail_x_pos+28, 480)))
+            else:
+                snail_x_pos += 1
 
             pygame.display.flip()
 
@@ -132,8 +156,9 @@ class QuizGame(Screen):
             
             manager.update(time_delta)
             manager.draw_ui(window_surface)
+
+            timer.display()
             
-            snail_x_pos += 2
             pygame.display.update()
-            clock.tick(200)
+            
 

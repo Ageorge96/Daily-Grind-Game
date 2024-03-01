@@ -1,8 +1,9 @@
 from screen.login import LoginScreen
 from screen.main import MainScreen
-from screen.minigames.intellect.quiz.quiz import QuizGame
+from minigames.intellect.quiz import QuizGame
 from screen.signup import SignupScreen
 from minigames.strength.woodcutting import WoodcuttingScreen
+
 
 Quiz = QuizGame(1000,650)
 Login = LoginScreen(1000, 650)
@@ -29,6 +30,10 @@ while run:
     elif response == 'strength':
         Woodcutting.data = currentScreen.data
         currentScreen = Woodcutting
+
+    elif response == 'intellect':
+        intellect.data = currentScreen.data
+        currentScreen = Quiz 
 
         
     elif response == 'stop':

@@ -5,6 +5,7 @@
         "colours": {
             "normal_bg": "#2a6b22",
             "normal_text": "#ffffff",
+            "selected_bg": "#ff0000",  
             "selected_text": "#000000"
         },
         "font":
