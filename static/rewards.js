@@ -10,12 +10,10 @@ const Rewards = ({ onClose }) => {
 
                 if (response.ok) {
                     const scriptContent = await response.text();
-
-                    // Create a script element and append it to the body
                     eval(scriptContent)
 
                     console.log('Collision detected in React! Show rewards.');
-                    onClose();  // Close the rewards component if needed
+                    onClose(); 
                 } else {
                     console.error('Failed to trigger rewards:', response.statusText);
                 }
