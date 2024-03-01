@@ -5,7 +5,6 @@ from lib.timer import Timer
 import pygame_gui
 
 pygame.init()
-manager = pygame_gui.UIManager((800, 600))
 
 
 # Set up the screen
@@ -21,7 +20,7 @@ clock_image = pygame.transform.scale(clock_image, (80, 80))  # Resize to a small
 background_racetrack_image = pygame.image.load("src/assets/running_track.png")
 background_racetrack_image = pygame.transform.scale(background_racetrack_image, (screen_width, screen_height))  # Resize to screen size
 
-
+manager = pygame_gui.UIManager((800, 600))
 # Function for the countdown timer it's set to ten seconds
 def game_timer_countdown():
     global my_timer
@@ -56,11 +55,14 @@ def display_game_finished_on_screen(screen):
 countdown_thread = threading.Thread(target=game_timer_countdown)
 countdown_thread.start()
 
+clock = pygame.time.Clock()
 
 running = True
-timer = Timer(0,0,manager)
+timer = Timer(10,10,manager)
 timer.start(1)
+
 while running:
+    time_delta = clock.tick(60)/1000.0
     timer.display()
     screen.blit(background_racetrack_image, (0, 0))
     #screen.blit(clock_image, (0, 10))
@@ -73,6 +75,8 @@ while running:
             running = False
         elif event.type == pygame.USEREVENT:
             running = False  
+         
+    manager.update(time_delta)   
     manager.draw_ui(screen)
 
 
