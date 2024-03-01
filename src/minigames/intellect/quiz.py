@@ -12,10 +12,6 @@ from pygame_gui.core import ObjectID
 from minigames.intellect.score import Score
 from lib.timer import Timer
 
-
-
-
-
 class QuestionRetrieval():
     @staticmethod
     def determine_randomness():
@@ -95,7 +91,7 @@ class QuizGame(Screen):
             splash_title_text = splash_title_font.render("Welcome to the Quiz!", True, WHITE)
 
             # Set instructions
-            splash_instruction_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 30)
+            splash_instruction_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 25)
             splash_instruction_text = splash_instruction_font.render("Collect 5 points for every correct answer.\n Lose 7 points for each incorrect answer.", True, WHITE)
 
             # Set start game button
@@ -105,10 +101,10 @@ class QuizGame(Screen):
             button_instruction_text = button_instruction_font.render('(Click here to start game)', True, INTELLECT_THEME)
 
             window_surface.blit(splash_title_text, (self.width // 2 - splash_title_text.get_width() // 2, self.height // 4))
-            window_surface.blit(splash_instruction_text, (self.width // 2 - splash_title_text.get_width() // 1.65, self.height // 2.25))
+            window_surface.blit(splash_instruction_text, (self.width // 2 - splash_title_text.get_width() // 1.8, self.height // 2.25))
             pygame.draw.rect(window_surface, WHITE, button_rect)
             window_surface.blit(button_text, (button_rect.centerx - button_text.get_width() // 2, button_rect.centery - button_text.get_height() // 2))
-            window_surface.blit(button_instruction_text, (button_rect.centerx - button_instruction_text.get_width() // 1.5, button_rect.centery + 13))
+            window_surface.blit(button_instruction_text, (button_rect.centerx - button_instruction_text.get_width() // 2, button_rect.centery + 18))
             pygame.display.flip()
 
 
@@ -125,7 +121,7 @@ class QuizGame(Screen):
         # while loop defined to initiate question refresh and timed game
         while is_running:
             time_delta = clock.tick(60)/1000.0
-           
+
             # defining randomness
             questions_length = QuestionRetrieval.determine_randomness()
             question_index = random.randint(1,questions_length)
