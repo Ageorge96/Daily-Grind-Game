@@ -43,12 +43,12 @@ class LoginScreen(Screen):
         window_surface = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
 
         background = pygame.Surface((self.width, self.height))
-        background.fill(pygame.Color('#ffffff'))
+        background.fill(pygame.Color('#000000'))
 
         manager = pygame_gui.UIManager((self.width, self.height), self.theme)
         
-        font = pygame.font.Font('freesansbold.ttf', 40)
-        text = font.render(f"The Daily Grind", True, (0,0,0))
+        font = pygame.font.Font('resources/fonts/Minecraft-Regular.otf', 46)
+        text = font.render(f"The Daily Grind", True, (255,255,255))
         text_rect = text.get_rect(center=(self.width/2, 120))
         
         
@@ -61,8 +61,12 @@ class LoginScreen(Screen):
                                                 manager=manager)
         password_field.set_text_hidden()
         
-        login_button = UIButton(relative_rect=pygame.Rect((self.width/2 - 300/2, 185 + 75 + 75 + 30), (100, 50)),
+        login_button = UIButton(relative_rect=pygame.Rect((self.width/2 - 300/2, 185 + 75 + 75 + 30), (150, 50)),
                                                 text='Login',
+                                                manager=manager)
+        
+        signup_button = UIButton(relative_rect=pygame.Rect((self.width/2, 185 + 75 + 75 + 30), (150, 50)),
+                                                text='Signup',
                                                 manager=manager)
         
         error_label = UILabel(relative_rect=pygame.Rect((self.width/2 - 275/2, 185 + 75 + 75 + 30 + 75), (275, 50)),
@@ -74,7 +78,7 @@ class LoginScreen(Screen):
         is_running = True
 
         timer = Timer(0,0, manager)
-        timer.start(0.2)
+        timer.start(1)
 
         while is_running:
             if not timer.status:
@@ -98,6 +102,9 @@ class LoginScreen(Screen):
                         if result:
                             self.data['user'] = User(result[1]['id'], result[1]['username'], result[1]['email'], result[1]['token'])
                             return 'main'
+                    
+                    elif event.ui_element == signup_button:
+                        return 'signup'
 
                 manager.process_events(event)
 
