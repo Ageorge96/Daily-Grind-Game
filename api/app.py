@@ -81,6 +81,7 @@ def get_quiz_range():
 
 @app.route('/quizgame', methods=['GET'])
 def get_quiz_questions():
+    id = request.args.get('id')
     connection = get_flask_database_connection(app)
     repository = QuestionRepository(connection)
     question_dict = repository.find(id)

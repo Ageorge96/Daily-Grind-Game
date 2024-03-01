@@ -11,26 +11,26 @@ from pygame_gui.core import ObjectID
 from screen.games.quiz.button import Button
 from screen.games.quiz.score import Score
 
-def choose_quesiton():
-    question_to_use = question_selection[question_index]
+# def choose_quesiton():
+#     question_to_use = question_selection[question_index]
     
-    return question_to_use["question"]
+#     return question_to_use["question"]
 
-def answers():
-    question_to_use = question_selection[question_index]
+# def answers():
+#     question_to_use = question_selection[question_index]
     
-    return question_to_use["options"]
+#     return question_to_use["options"]
 
-def correct_answer():
-    answer_to_use = question_selection[question_index]
+# def correct_answer():
+#     answer_to_use = question_selection[question_index]
     
-    return answer_to_use["correct_answer"]
+#     return answer_to_use["correct_answer"]
 
 # define score:
 
 class QuestionRetrieval():
-
-    def determine_randomness(self):
+    @staticmethod
+    def determine_randomness():
         url = 'http://127.0.0.1:5000/questionrange'  
         response = requests.get(url)
         if response.status_code == 200:
@@ -39,28 +39,33 @@ class QuestionRetrieval():
             return number
         else:
             print("Failed to fetch questions:", response.text)
+    @staticmethod
+    def fetch_questions(id):
+        url = 'http://127.0.0.1:5000/quizgame'  
+        response = requests.get(url, params={'id': id})
+        if response.status_code == 200:
+            questions = response.json()
+            return questions
+        else:
+            print("Failed to fetch questions:", response.text)
 
 
     
 
-questions = QuestionRetrieval()
-questions_length = questions.determine_randomness()
-question_index = random.randint(0,questions_length)
+# questions = QuestionRetrieval()
+# questions_length = questions.determine_randomness()
 
-def fetch_questions(self, id):
-    url = 'http://127.0.0.1:5000/quizgame'  
-    response = requests.get(url)
-    if response.status_code == 200:
-        questions = response.json()
-        print(questions)
-    else:
-        print("Failed to fetch questions:", response.text)
+
+global question_index
+global questions_length 
+
 
 
 
 class QuizGame(Screen):
 
     def render(self):
+        
         pygame.init()
         pygame.display.set_caption('Test Your Intellect...')
         window_surface = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
@@ -73,9 +78,12 @@ class QuizGame(Screen):
         snail_x_pos = 0
         clock = pygame.time.Clock()
         is_running = True
+        self.question = None
         score = Score()
 
         while is_running:
+
+            
 
             manager = pygame_gui.UIManager((self.width, self.height), self.intellect_theme)
 
@@ -84,12 +92,19 @@ class QuizGame(Screen):
             #  defining questions and answers
             # number_range = 
             # print("json number", number)
-            questions = fetch_questions(question_index)
-            answer_list = answers()
+            questions_length = QuestionRetrieval.determine_randomness()
+            question_index = random.randint(0,questions_length-1)
 
+
+
+            if self.question is None:
+                questions_retrieval = QuestionRetrieval.fetch_questions(question_index)
+                self.question = questions_retrieval["question"]
             
-
-           
+            # print("questions",question)
+            answer_list = questions_retrieval["options"]
+            correct_answer = questions_retrieval["answer"]
+            
             
             score_keeper = "£" + str(score.game_score)
             pot_of_gold_surface = pygame.image.load('src/assets/pot_of_gold.png')
@@ -98,7 +113,7 @@ class QuizGame(Screen):
 
             # defining question
             font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 40)
-            text = font.render(question, True, (255, 255, 255)) 
+            text = font.render(self.question, True, (255, 255, 255)) 
             text_rect = text.get_rect(center=(self.width/2, 120))
 
             score_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 20)
@@ -122,14 +137,16 @@ class QuizGame(Screen):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                         for i in range(len(button_capture)):
                             if button_capture[i].collidepoint(event.pos):
-                                if answer_list[i] == correct_answer():
+                                if answer_list[i] == correct_answer:
                                     print("correct")
                                     score.add_points()
+                                    self.question = None
+                                    # question_index = random.randint(0,questions_length-1)
                                 else:
                                     print("incorrect")
                                     score.remove_points()
-                                global question_index 
-                                question_index = random.randint(0,questions_length-1)
+                                    self.question = None
+                                    # question_index = random.randint(0,questions_length-1)
 
 
                 if event.type == pygame.QUIT:

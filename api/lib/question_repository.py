@@ -23,6 +23,5 @@ class QuestionRepository:
             question = question_result[0][1]
             options = question_result[0][2]
             answer = question_result [0][3]
-        
         return Question(id, question, options, answer)
 
