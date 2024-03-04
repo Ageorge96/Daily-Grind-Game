@@ -1,9 +1,4 @@
-from flask import Flask, request, Response, session, jsonify
-from lib.user_repository import UserRepository
-from lib.user import User
-from lib.db import get_flask_database_connection
-from lib.question_repository import QuestionRepository
-from lib.question import Question
+from flask import Flask
 from routes.user import route_user
 from routes.stat import route_stat
 from routes.questions import route_questions

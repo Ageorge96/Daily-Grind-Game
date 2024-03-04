@@ -5,7 +5,6 @@ import pygame_gui
 import time
 import requests, json
 import sys
-# import asyncio
 from screen.screen import Screen
 from pygame_gui.elements import UIButton, UITextEntryLine, UILabel, UITextBox
 from pygame_gui.core import ObjectID
@@ -46,7 +45,6 @@ class QuizGame(Screen):
         pygame.init()
         pygame.display.set_caption('Test Your Intellect...')
         window_surface = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
-        # background = pygame.Surface((self.width, self.height))
 
         # Colors
         WHITE = (255, 255, 255)
@@ -124,7 +122,7 @@ class QuizGame(Screen):
 
             # defining randomness
             questions_length = QuestionRetrieval.determine_randomness()
-            question_index = random.randint(1,questions_length)
+            question_index = random.sample(range(questions_length), 1)
 
             # defining question, options and answers
             if self.question is None:
