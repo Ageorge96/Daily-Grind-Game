@@ -4,3 +4,4 @@ class Screen:
         self.height = height
         self.theme = 'style/theme.json'
         self.data = data
+        

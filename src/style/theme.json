@@ -3,7 +3,8 @@
     {
         "colours":
          {
-             "normal_text": "#ffffff"
+             "normal_text": "#ffffff",
+             "background": "#00A86B" 
          },
          
         "font":

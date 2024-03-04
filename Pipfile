@@ -5,9 +5,11 @@ name = "pypi"
 
 [packages]
 django = "==5.0.2"
-pygame = "==2.5.2"
+pygame = "*"
 pymongo = "==4.6.2"
 python-dotenv = "==1.0.1"
+pytest = "*"
+flask = "*"
 pygame-gui = "==0.6.9"
 pytest = "*"
 requests = "*"
