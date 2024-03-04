@@ -122,7 +122,7 @@ class QuizGame(Screen):
 
             # defining randomness
             questions_length = QuestionRetrieval.determine_randomness()
-            question_index = random.sample(range(questions_length), 1)
+            question_index = random.sample(range(1, questions_length + 1), 1)
 
             # defining question, options and answers
             if self.question is None:
@@ -182,8 +182,8 @@ class QuizGame(Screen):
                 
             if not timer.status:
                 snail_x_pos += 0
-                window_surface.blit(snail_speech_surface, ((snail_x_pos, 450)))
-                window_surface.blit(speech_text, ((snail_x_pos+28, 480)))
+                window_surface.blit(snail_speech_surface, ((snail_x_pos - 5, 450)))
+                window_surface.blit(speech_text, ((snail_x_pos+25, 480)))
             else:
                 snail_x_pos += 1
 
