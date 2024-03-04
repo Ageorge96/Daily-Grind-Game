@@ -22,7 +22,18 @@ def handle_collision():
         with open(rewards_file_path, 'r') as file:
             rewards_content = file.read()
 
-        return f'Content of rewards.js: {rewards_content}'
+        # Use a marker or delimiter to extract the desired content
+        start_marker = '/* START REACT COMPONENT */'
+        end_marker = '/* END REACT COMPONENT */'
+
+        start_index = rewards_content.find(start_marker)
+        end_index = rewards_content.find(end_marker, start_index)
+
+        if start_index != -1 and end_index != -1:
+            desired_content = rewards_content[start_index + len(start_marker):end_index]
+            return desired_content.strip()
+        else:
+            return 'Error: Unable to find the desired content in rewards.js'
 
 class RewardsResource(Resource):
     def post(self):

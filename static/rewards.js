@@ -35,12 +35,14 @@ const Rewards = ({ onClose }) => {
         };
     }, [onClose]);
 
-    return (
-        <div className="popup">
-            <h2>Game Over</h2>
-            <button onClick={onClose}>Exit</button>
-        </div>
-    );
+   
+return ( /* START REACT COMPONENT */
+    <div className="popup">
+        <h2>Game Over</h2>
+        <button onClick={onClose}>Exit</button>
+    </div>
+/* END REACT COMPONENT */);
+
 };
 
 export default Rewards;
