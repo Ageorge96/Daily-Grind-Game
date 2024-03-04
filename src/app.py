@@ -5,13 +5,13 @@ from screen.signup import SignupScreen
 from minigames.strength.woodcutting import WoodcuttingScreen
 
 
-Quiz = QuizGame(1000,650)
-Login = LoginScreen(1000, 650)
-Main = MainScreen(1000, 650)
-Signup = SignupScreen(1000, 650) 
-Woodcutting = WoodcuttingScreen(1000, 650)
+Quiz = QuizGame()
+Login = LoginScreen()
+Main = MainScreen()
+Signup = SignupScreen() 
+Woodcutting = WoodcuttingScreen()
 
-currentScreen = Quiz
+currentScreen = Main
 
 run = True
 
