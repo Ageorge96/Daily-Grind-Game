@@ -17,7 +17,7 @@ class RunningScreen(Screen):
 
         # Set up the game window
         wid, hei = 1000, 650
-        screen = pygame.display.set_mode((wid, hei))
+        screen = pygame.display.set_mode((wid, hei), pygame.SCALED)
         pygame.display.set_caption("Track and Field Game")
 
         # Colors
@@ -29,7 +29,7 @@ class RunningScreen(Screen):
         player_width, player_height = 50, 50
         player_vel = 7
         jump_height = 100
-        global is_jumping, last_speed_increase_time, hurdle_vel, player_y, points
+        global is_jumping, last_speed_increase_time, hurdle_vel, player_y, points, player_x
         is_jumping = False
         jump_count = 10
 
@@ -184,7 +184,7 @@ class RunningScreen(Screen):
         def display_rewards():
             webview.create_window("Rewards", "http://localhost:5000/rewards", width=400, height=300)
             webview.start()
-            pass
+            return "woodcutting"
 
         points=0
 
@@ -219,17 +219,15 @@ class RunningScreen(Screen):
                     url = 'http://localhost:5000/rewards'
                     data = {}  # You can include data in the request if needed
                     headers = {}  # You can include headers in the request if needed
-
                     response = requests.post('http://localhost:5000/rewards', headers={'Content-Type': 'application/json'})
                     print(response.text)
-
                     # # Check the response if needed
                     if response.status_code == 200:
                          print("Request to Flask server successful")
                     else:
                          print(f"Request to Flask server failed with status code {response.status_code}")
-
                     display_rewards()
+                    return "dummy"
                 # Move hurdles
                 move_hurdles(hurdles)
 
@@ -263,22 +261,36 @@ class RunningScreen(Screen):
             screen.blit(counter_text, (10, 10))
 
             # Handle events in the game over state
-            if game_over:
-                # Display game over text and exit button
-                screen.blit(game_over_text, game_over_rect)
-                pygame.draw.rect(screen, (255, 255, 255), exit_button_rect)  # Draw a white rectangle
-                screen.blit(exit_button_text, exit_button_rect)
+            # if game_over:
+            #     # Display game over text and exit button
+            #     screen.blit(game_over_text, game_over_rect)
+            #     pygame.draw.rect(screen, (255, 255, 255), exit_button_rect)  # Draw a white rectangle
+            #     screen.blit(exit_button_text, exit_button_rect)
+            #     # ws.send("rewards")
+                    
+            #     # # Use the requests library to send a POST request to Flask server
+            #     # url = 'http://localhost:5000/rewards'
+            #     # data = {}  # You can include data in the request if needed
+            #     # headers = {}  # You can include headers in the request if needed
+            #     # response = requests.post('http://localhost:5000/rewards', headers={'Content-Type': 'application/json'})
+            #     # print(response.text)
+            #     # # # Check the response if needed
+            #     # if response.status_code == 200:
+            #     #      print("Request to Flask server successful")
+            #     # else:
+            #     #      print(f"Request to Flask server failed with status code {response.status_code}")
+            #     # display_rewards()
 
-                # Update the display
-                pygame.display.update()
+            #     # Update the display
+            #     pygame.display.update()
 
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        running = False
-                    elif event.type == pygame.MOUSEBUTTONDOWN:
-                        x, y = event.pos
-                        if exit_button_rect.collidepoint(x, y):
-                            running = False
+            #     for event in pygame.event.get():
+            #         if event.type == pygame.QUIT:
+            #             running = False
+            #         elif event.type == pygame.MOUSEBUTTONDOWN:
+            #             x, y = event.pos
+            #             if exit_button_rect.collidepoint(x, y):
+            #                 running = False
 
             # Update the display
             pygame.display.update()

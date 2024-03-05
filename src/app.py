@@ -43,6 +43,9 @@ while run:
     elif response == 'running':
         # Running.user = currentScreen.user
         currentScreen = Running 
+    elif response == 'dummy':
+        # Running.user = currentScreen.user
+        currentScreen = Dummy 
 
         
     elif response == 'stop':

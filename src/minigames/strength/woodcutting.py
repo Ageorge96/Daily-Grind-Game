@@ -130,7 +130,7 @@ class WoodcuttingScreen(Screen):
 
 
         timer = Timer(0, 12, manager)
-        timer.start(0.66)
+        timer.start(0.01)
 
         clock = pygame.time.Clock()
 
@@ -139,7 +139,7 @@ class WoodcuttingScreen(Screen):
         while running:
             if not timer.status:
 
-                point_system = PointSystem(self.user.id)
+                point_system = PointSystem(6,2,1,"hi")
                 point_system.get_rewards()
                 return 'stop'
             
