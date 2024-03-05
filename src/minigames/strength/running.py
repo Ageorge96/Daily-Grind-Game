@@ -4,8 +4,8 @@ import os
 import random
 from screen.screen import Screen
 from pygame.locals import QUIT
-# from websocket import create_connection
-# import webview
+from websocket import create_connection
+import webview
 import requests
 
 
@@ -182,8 +182,8 @@ class RunningScreen(Screen):
 
         # Webview component to display React rewards component
         def display_rewards():
-            # webview.create_window("Rewards", "http://localhost:5000/rewards", width=400, height=300)
-            # webview.start()
+            webview.create_window("Rewards", "http://localhost:5000/rewards", width=400, height=300)
+            webview.start()
             pass
 
         points=0
@@ -195,7 +195,7 @@ class RunningScreen(Screen):
         points_gained = 0
 
         # Create WebSocket connection
-        # ws = create_connection("ws://localhost:8000")
+        ws = create_connection("ws://localhost:8000")
 
         while running:
             for event in pygame.event.get():
@@ -213,21 +213,21 @@ class RunningScreen(Screen):
                     pygame.mixer.music.stop()  # Stop background music
                     crash_sound.play()  # Play crash sound effect
                     points_gained = points
-                    # ws.send("rewards")
+                    ws.send("rewards")
                     
                     # Use the requests library to send a POST request to Flask server
                     url = 'http://localhost:5000/rewards'
                     data = {}  # You can include data in the request if needed
                     headers = {}  # You can include headers in the request if needed
 
-                    # response = requests.post('http://localhost:5000/rewards', headers={'Content-Type': 'application/json'})
-                    # print(response.text)
+                    response = requests.post('http://localhost:5000/rewards', headers={'Content-Type': 'application/json'})
+                    print(response.text)
 
                     # # Check the response if needed
-                    # if response.status_code == 200:
-                    #     print("Request to Flask server successful")
-                    # else:
-                    #     print(f"Request to Flask server failed with status code {response.status_code}")
+                    if response.status_code == 200:
+                         print("Request to Flask server successful")
+                    else:
+                         print(f"Request to Flask server failed with status code {response.status_code}")
 
                     display_rewards()
                 # Move hurdles
@@ -284,7 +284,7 @@ class RunningScreen(Screen):
             pygame.display.update()
             clock.tick(30)
         # Close WebSocket connection
-        # ws.close()
+        ws.close()
 
         # Quit Pygame
         pygame.quit()
