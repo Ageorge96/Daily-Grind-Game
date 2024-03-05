@@ -1,4 +1,4 @@
-
+from math import floor
 import requests
 
 class PointSystem:
@@ -20,11 +20,35 @@ class PointSystem:
         return exp, money
 
     def tally_experience(self):
-        pass
+        max_score: int
+        if self.game == 'woodcutting':
+            max_score = 25
+        elif self.game == 'running':
+            max_score = 900
+        elif self.game == 'quiz':
+            pass
+        else:
+            print("Error calculating results - Game not found")
+
+        reward = floor(((self.score * self.user_type_level) / max_score) * 25)
+
+        return reward
 
     
     def tally_money(self):
-        pass
+        max_score: int
+        if self.game == 'woodcutting':
+            max_score = 25
+        elif self.game == 'running':
+            max_score = 900
+        elif self.game == 'quiz':
+            pass
+        else:
+            print("Error calculating results - Game not found")
+
+        reward = floor(((self.score * self.user_type_level) / max_score) * 100)
+
+        return reward
 
     def add_to_user_history(self):
         url = 'http://127.0.0.1:5000/stat/add'

@@ -13,7 +13,6 @@ class WoodcuttingScreen(Screen):
     def render(self):
         # Initialize Pygame
         pygame.init()
-        print(self.user.id)
 
         screen = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
         pygame.display.set_caption("Daily Grind - Woodcutting (Strength)")
