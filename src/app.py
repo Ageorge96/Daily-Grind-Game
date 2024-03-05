@@ -40,8 +40,6 @@ while run:
         Quiz.data = currentScreen.data
         currentScreen = Quiz 
 
-    
-
 
         
     elif response == 'stop':
