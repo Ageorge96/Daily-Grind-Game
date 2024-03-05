@@ -13,8 +13,14 @@ flask = "*"
 pygame-gui = "==0.6.9"
 pytest = "*"
 requests = "*"
+websockets = "*"
+flask-socketio = "*"
+pywebview = "*"
+flask-cors = "*"
+flask-restful = "*"
+websocket-client = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.12"
+python_version = "*"
