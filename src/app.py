@@ -3,15 +3,16 @@ from screen.main import MainScreen
 from minigames.intellect.quiz import QuizGame
 from screen.signup import SignupScreen
 from minigames.strength.woodcutting import WoodcuttingScreen
+from minigames.intellect.memory_game import MemoryGame
 
-
-Quiz = QuizGame(1000,650)
+Memory = MemoryGame(1000, 650)
 Login = LoginScreen(1000, 650)
 Main = MainScreen(1000, 650)
 Signup = SignupScreen(1000, 650) 
 Woodcutting = WoodcuttingScreen(1000, 650)
+Quiz = QuizGame(1000,650)
 
-currentScreen = Quiz
+currentScreen = Memory
 
 run = True
 
@@ -32,8 +33,15 @@ while run:
         currentScreen = Woodcutting
 
     elif response == 'intellect':
-        intellect.data = currentScreen.data
-        currentScreen = Quiz 
+        Memory.data = currentScreen.data
+        currentScreen = Memory
+
+    # elif response == 'intellect':
+    #     Quiz.data = currentScreen.data
+    #     currentScreen = Quiz 
+
+    
+
 
         
     elif response == 'stop':
