@@ -6,12 +6,12 @@ image_list = ["banana.png", "bear.png", "cherry.png", "chocolate.png", "cookie.p
 
 class BoardCreator():
     def __init__(self):
-        # save the images created to ensure that pairs are displayed
         self.images_on_board = []
         self.selected_images = []
     @staticmethod
     def random_image(self):
         return random.choice(image_list)
+    
     def generate_board(self, cards):
         images = image_list * 2  # Duplicate the image list to create pairs
         random.shuffle(images)  

@@ -10,8 +10,9 @@ import pygame, pygame_gui
 from pygame_gui.elements import UILabel
 from lib.timer import Timer
 from screen.screen import Screen
-from minigames.intellect.user_board_input import UserInput
-from minigames.intellect.board_creator import BoardCreator
+from minigames.intellect.memory_game.user_board_input import UserInput
+from minigames.intellect.memory_game.board_creator import BoardCreator
+from score import Score
 
 
 image_list = ["banana.png", "bear.png", "cherry.png", "chocolate.png", "cookie.png", "green_apple.webp"]
@@ -28,11 +29,13 @@ class MemoryGame(Screen):
 
         board = BoardCreator()
         user_input = UserInput()
+        score = Score()
 
         # Colors
         WHITE = (255, 255, 255)
         BLACK = (0, 0, 0)
         INTELLECT_THEME = (0, 160, 0)
+        CARD_THEME = (176, 212, 163)
         # Button dimensions
         BUTTON_WIDTH = 500
         BUTTON_HEIGHT = 80
@@ -98,14 +101,15 @@ class MemoryGame(Screen):
                 
                 manager = pygame_gui.UIManager((self.width, self.height), self.theme)
 
-                window_surface.fill((0, 0, 0)) 
+                window_surface.fill(CARD_THEME) 
+
 
                 size = [70, 290, 510, 730]
                 y_size = [40, 230, 420]
                 cards = []
                 for i in range(len(size)):
                     for y in range(len(y_size)):
-                        cards.append(pygame.draw.rect(window_surface, WHITE, [size[i], y_size[y], self.width/5, 175], 0 ))
+                        cards.append(pygame.draw.rect(window_surface, WHITE, [size[i], y_size[y], self.width/5, 175], 100, 9 ))
                 
                 if board.images_on_board == []:
                     board.generate_board(cards)
@@ -146,9 +150,7 @@ class MemoryGame(Screen):
                 # else:
                 #     snail_x_pos += 1
                     
-                    if len(board.images_on_board) == len(board.selected_images):
-                        board.images_on_board = []
-                        board.selected_images = []
+                    
                     
                     
                 # blit the image for the current click and matches
@@ -156,10 +158,16 @@ class MemoryGame(Screen):
                     if area in user_input.input or area in board.selected_images:
                         image_path = area["image"]
                         card_surface = pygame.image.load(f"src/assets/intellect/memory_game/{image_path}")
-                        card_surface = pygame.transform.scale(card_surface, (70,70))
-                        window_surface.blit(card_surface, (area["position"]))
+                        card_surface = pygame.transform.scale(card_surface, (150,150))
+                        rect = card_surface.get_rect(center=area["position"].center)
+                        window_surface.blit(card_surface, rect.topleft)
+                    if area in board.selected_images:
+                        color = (48, 141, 70)
+                        pygame.draw.rect(window_surface, color, pygame.Rect(area["position"]),  3, 9, 9, 9)
                         
-
+                    if len(board.images_on_board) == len(board.selected_images):
+                        board.images_on_board = []
+                        board.selected_images = []
 
                     
 
