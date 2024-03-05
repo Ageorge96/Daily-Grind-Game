@@ -12,7 +12,7 @@ from lib.timer import Timer
 from screen.screen import Screen
 from minigames.intellect.memory_game.user_board_input import UserInput
 from minigames.intellect.memory_game.board_creator import BoardCreator
-from score import Score
+from minigames.intellect.memory_game.score import Score
 
 
 image_list = ["banana.png", "bear.png", "cherry.png", "chocolate.png", "cookie.png", "green_apple.webp"]
@@ -24,6 +24,7 @@ class MemoryGame(Screen):
         self.theme = '/Users/katie-roseanthonisz/final_project_the_daily_grind/src/style/theme_intellect.json'
     
         pygame.init()
+        pygame.mixer.init()
         pygame.display.set_caption('Test Your Intellect...')
         window_surface = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
 
@@ -44,11 +45,13 @@ class MemoryGame(Screen):
 
         manager = pygame_gui.UIManager((self.width, self.height), self.theme)
         
+        # defining sounds for correct pairs
+        correct = pygame.mixer.Sound('/Users/katie-roseanthonisz/final_project_the_daily_grind/src/assets/intellect/correct.mp3')
+        
         is_running = True
         clock = pygame.time.Clock()
 
-        timer = Timer(0, 5, manager)
-        timer.start(0.66)
+        
 
         def is_button_clicked(mouse_pos, clickable_pos):
             return clickable_pos.collidepoint(mouse_pos)
@@ -93,15 +96,23 @@ class MemoryGame(Screen):
             return button_clicked
 
         button_clicked = display_splash_screen()
+
+        timer = Timer(0, 5, manager)
+        timer.start(0.66)
         
 
         if button_clicked:
+
             while is_running:
                 time_delta = clock.tick(60)/1000.0
-                
-                manager = pygame_gui.UIManager((self.width, self.height), self.theme)
 
                 window_surface.fill(CARD_THEME) 
+
+                score_keeper = "Score:" + str(score.game_score)
+                score_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 20)
+                score_font.set_bold(True)
+                score_text = score_font.render(score_keeper, False, (255, 255, 255))
+                score_text_rect = score_text.get_rect(bottomright=(970, 35))
 
 
                 size = [70, 290, 510, 730]
@@ -114,10 +125,6 @@ class MemoryGame(Screen):
                 if board.images_on_board == []:
                     board.generate_board(cards)
 
-
-                background_surface = pygame.image.load('src/assets/intellect/istockphoto-1185747322-612x612.jpg')
-                background_surface = pygame.transform.scale(background_surface, (1000,650))
-            
                 
                 time_delta = clock.tick(60)/1000.0
                 for event in pygame.event.get():
@@ -128,8 +135,10 @@ class MemoryGame(Screen):
                                     first_area = user_input.input[0]
                                     second_area = user_input.input[1]
                                     if user_input.is_valid():
+                                        correct.play()
                                         board.add_selected_images(first_area)
                                         board.add_selected_images(second_area)
+                                        score.add_points()
                                         user_input.input = []
                                         print("Match!")
                                     else:
@@ -143,15 +152,7 @@ class MemoryGame(Screen):
                             is_running = False
                             return 'stop' 
                 
-                # if not timer.status:
-                #     snail_x_pos += 0
-                #     window_surface.blit(snail_speech_surface, ((snail_x_pos - 5, 450)))
-                #     window_surface.blit(speech_text, ((snail_x_pos+25, 480)))
-                # else:
-                #     snail_x_pos += 1
-                    
-                    
-                    
+                
                     
                 # blit the image for the current click and matches
                 for area in board.images_on_board:
@@ -166,17 +167,31 @@ class MemoryGame(Screen):
                         pygame.draw.rect(window_surface, color, pygame.Rect(area["position"]),  3, 9, 9, 9)
                         
                     if len(board.images_on_board) == len(board.selected_images):
+                        score.bonus_points()
                         board.images_on_board = []
                         board.selected_images = []
+
+                if not timer.status:
+                    window_surface.fill(CARD_THEME) 
+                    GAME_OVER_font = pygame.font.Font('/Users/katie-roseanthonisz/final_project_the_daily_grind/src/resources/fonts/RobotoMono-Regular.ttf', 40)
+                    GAME_OVER_font.set_bold(True)
+                    GAME_OVER_text = GAME_OVER_font.render("GAME OVER!", True, WHITE)
+
+                    text_width, text_height = GAME_OVER_text.get_size()
+                    window_center = (window_surface.get_width() // 2, window_surface.get_height() // 2)
+                    text_position = (window_center[0] - text_width // 2, window_center[1] - text_height // 2)
+                    window_surface.blit(GAME_OVER_text, text_position)
+                    
 
                     
 
                 pygame.display.flip()
-                
 
+                window_surface.blit(score_text, score_text_rect)
                 manager.update(time_delta)
                 manager.draw_ui(window_surface)
 
                 timer.display()
+
                 pygame.display.update()
 
