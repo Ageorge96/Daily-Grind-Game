@@ -5,14 +5,14 @@ from screen.signup import SignupScreen
 from minigames.strength.woodcutting import WoodcuttingScreen
 from minigames.intellect.memory_game.memory_game import MemoryGame
 
-Memory = MemoryGame(1000, 650)
-Login = LoginScreen(1000, 650)
-Main = MainScreen(1000, 650)
-Signup = SignupScreen(1000, 650) 
-Woodcutting = WoodcuttingScreen(1000, 650)
-Quiz = QuizGame(1000,650)
 
-currentScreen = Memory
+Quiz = QuizGame()
+Login = LoginScreen()
+Main = MainScreen()
+Signup = SignupScreen() 
+Woodcutting = WoodcuttingScreen()
+Memory = MemoryGame()
+currentScreen = Main
 
 run = True
 
