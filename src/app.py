@@ -11,14 +11,14 @@ Main = MainScreen(1000, 650)
 Signup = SignupScreen(1000, 650) 
 Woodcutting = WoodcuttingScreen(1000, 650)
 
-currentScreen = Quiz
+currentScreen = Login
 
 run = True
 
 while run:
     response = currentScreen.render()
     if response == 'main':
-        Main.data = currentScreen.data
+        Main.user = currentScreen.user
         currentScreen = Main
 
     elif response == 'signup':
@@ -28,11 +28,11 @@ while run:
         currentScreen = Login
 
     elif response == 'strength':
-        Woodcutting.data = currentScreen.data
+        Woodcutting.user = currentScreen.user
         currentScreen = Woodcutting
 
     elif response == 'intellect':
-        intellect.data = currentScreen.data
+        Quiz.user = currentScreen.user
         currentScreen = Quiz 
 
         

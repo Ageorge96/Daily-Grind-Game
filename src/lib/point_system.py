@@ -1,4 +1,4 @@
-from api.lib.stat_repository import StatRepository
+
 import requests
 
 class PointSystem:
@@ -15,16 +15,16 @@ class PointSystem:
     def get_rewards(self):
         exp = self.tally_experience()
         money = self.tally_money()
-        # self.add_to_user_history()
+        self.add_to_user_history()
 
         return exp, money
 
     def tally_experience(self):
-        return 10
+        pass
 
     
     def tally_money(self):
-        return 10
+        pass
 
     def add_to_user_history(self):
         url = 'http://127.0.0.1:5000/stat/add'

@@ -94,7 +94,7 @@ class LoginScreen(Screen):
                         result = validate_login(username, password, error_label)
                         
                         if result:
-                            self.data['user'] = User(result[1]['id'], result[1]['username'], result[1]['email'], result[1]['token'])
+                            self.user = User(result[1]['id'], result[1]['username'], result[1]['email'], result[1]['token'])
                             return 'main'
                     
                     elif event.ui_element == signup_button:
