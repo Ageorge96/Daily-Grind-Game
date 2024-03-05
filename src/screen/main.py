@@ -14,7 +14,7 @@ class MainScreen(Screen):
         background.fill(pygame.Color('#000000'))
         
         font = pygame.font.Font('freesansbold.ttf', 32)
-        text = font.render(f"Welcome {self.data['user'].username}!, your id is: {self.data['user'].id} and email is: {self.data['user'].email}", True, (255,255,255))
+        text = font.render(f"Welcome {self.user.username}!, your id is: {self.user.id} and email is: {self.user.email}", True, (255,255,255))
         text_rect = text.get_rect(center=(self.width/2, self.height/2))
         
         manager = pygame_gui.UIManager((self.width, self.height), self.theme)
