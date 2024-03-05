@@ -5,6 +5,7 @@ import sys
 
 from screen.screen import Screen
 from lib.timer import Timer
+from lib.point_system import PointSystem
 
 class WoodcuttingScreen(Screen):
 
@@ -12,6 +13,7 @@ class WoodcuttingScreen(Screen):
     def render(self):
         # Initialize Pygame
         pygame.init()
+        print(self.user.id)
 
         screen = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
         pygame.display.set_caption("Daily Grind - Woodcutting (Strength)")
@@ -137,6 +139,9 @@ class WoodcuttingScreen(Screen):
         running = True
         while running:
             if not timer.status:
+
+                point_system = PointSystem(self.user.id)
+                point_system.get_rewards()
                 return 'stop'
             
             timer.display()

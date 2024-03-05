@@ -1,5 +1,5 @@
 from api.lib.stat_repository import StatRepository
-import requests, json
+import requests
 
 class PointSystem:
     def __init__(self, user_id: int, user_type_level: int, score: int, game: str):
@@ -8,19 +8,23 @@ class PointSystem:
         self.score = score
         self.game = game
 
+    # wood cutting - 25
+    # running - 900
+
+    # Call on mini-game completion
     def get_rewards(self):
         exp = self.tally_experience()
         money = self.tally_money()
-        self.add_to_user_history()
+        # self.add_to_user_history()
 
         return exp, money
 
     def tally_experience(self):
-        pass
+        return 10
 
     
     def tally_money(self):
-        pass
+        return 10
 
     def add_to_user_history(self):
         url = 'http://127.0.0.1:5000/stat/add'
