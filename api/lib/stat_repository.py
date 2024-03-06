@@ -29,9 +29,8 @@ class StatRepository:
         else:
             return None
     
-    def add(self, user_id, score, game):
+    def add(self, stat:Stat):
 
-        stat = Stat(None, user_id, score, game)
         timestamp = time.time()
         stat.date = datetime.fromtimestamp(timestamp, tz=None)
         
