@@ -54,3 +54,24 @@ def add_experience():
 
         response = {'message': 'User experience updated'}
         return Response(json.dumps(response), status=200, mimetype='application/json')
+    
+@route_user_stats.route('/user_stats/money', methods=['POST'])
+def add_money():
+    user_id = request.form['user_id']
+    money = request.form['money']
+
+    connection = get_flask_database_connection(route_user_stats)
+    user_stats_repo = UserStatsRepository(connection)
+
+    user = user_stats_repo.find(user_id)
+    print('made')
+
+    if user == None:
+        response = {'message': 'Unable to find user'}
+        return Response(json.dumps(response), status=400, mimetype='application/json')
+    
+    else:
+        user_stats_repo.add_money(user_id, money)
+
+        response = {'message': 'User funds updated'}
+        return Response(json.dumps(response), status=200, mimetype='application/json')

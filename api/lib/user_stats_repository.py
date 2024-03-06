@@ -53,22 +53,31 @@ class UserStatsRepository:
 
         current_level_max = 100 + (getattr(user_stats, type_level) * 20)
 
+        print(experience_gain_total)
+        print(current_level_max)
+
         if experience_gain_total >= current_level_max:
+            print('made it')
             # increment level
-            level_up_query = 'UPDATE user_stats SET %s = %s + 1 WHERE user_id=%s'
-            self._connection.execute(level_up_query, (type_level, type_level, user_id))
+            level_up_query = 'UPDATE user_stats SET {} = {} + 1 WHERE user_id=%s'.format(type_level, type_level)
+            print(level_up_query)
+            self._connection.execute(level_up_query, [user_id])
+
+            print('dwidw122')
 
             # reset experience
-            reset_experience_query = 'UPDATE user_stats SET %s = 0 WHERE user_id=%s'
-            self._connection.execute(reset_experience_query, (add_experience_to, user_id))
+            reset_experience_query = 'UPDATE user_stats SET {} = 0 WHERE user_id=%s'.format(add_experience_to)
+            self._connection.execute(reset_experience_query, [user_id])
 
             # subract level max from experience gained
             experience_gain_total -= current_level_max
 
-        add_experience_query = 'UPDATE user_stats SET strenght_experience = %s + %s WHERE user_id=%s'
-        self._connection.execute(add_experience_query, [ add_experience_to, experience_gain_total, user_id])
+        add_experience_query = 'UPDATE user_stats SET {} = %s WHERE user_id=%s'.format(add_experience_to)
+        self._connection.execute(add_experience_query, (experience_gain_total, user_id))
         
 
     def add_money(self, user_id: int, money: int):
+        print(money)
+        print(user_id)
         query = 'UPDATE user_stats SET user_money = user_money + %s WHERE user_id=%s'
-        self._connection.execute(query, (user_id, money))
+        self._connection.execute(query, (money, user_id))

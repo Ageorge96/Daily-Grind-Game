@@ -31,7 +31,8 @@ class PointSystem:
             game_type = 'strength'
         elif self.game == 'quiz':
             game_type = 'intellect'
-            pass
+        elif self.game == 'memory':
+            game_type = 'intellect'
         else:
             print("Error calculating results - Game not found")
 
