@@ -21,7 +21,7 @@ def validate_login(username, password, error_label):
         response = requests.post(url, payload)
         
         if response.status_code == 200:
-            return (True, json.loads(response.text))
+            return (True, json.loads(response.text), response.cookies)
         
         else:
             error_label.set_text('Username or password is incorrect!')
@@ -94,6 +94,7 @@ class LoginScreen(Screen):
                         result = validate_login(username, password, error_label)
                         
                         if result:
+                            self.data['session'] = result[2]
                             self.data['user'] = User(result[1]['id'], result[1]['username'], result[1]['email'], result[1]['token'])
                             return 'main'
                     
