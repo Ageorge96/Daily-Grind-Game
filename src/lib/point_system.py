@@ -21,17 +21,23 @@ class PointSystem:
 
     def tally_experience(self):
         max_score: int
+        game_type: str
+
         if self.game == 'woodcutting':
             max_score = 25
+            game_type = 'strength'
         elif self.game == 'running':
             max_score = 900
+            game_type = 'strength'
         elif self.game == 'quiz':
+            game_type = 'intellect'
             pass
         else:
             print("Error calculating results - Game not found")
 
         reward = floor(((self.score * self.user_type_level) / max_score) * 25)
 
+        # add exp to user
         return reward
 
     
@@ -48,6 +54,7 @@ class PointSystem:
 
         reward = floor(((self.score * self.user_type_level) / max_score) * 100)
 
+        # add money to user
         return reward
 
     def add_to_user_history(self):

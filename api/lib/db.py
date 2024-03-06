@@ -14,6 +14,7 @@ class DBConnection():
             raise Exception('Connection Error')
     
     def execute(self, query, params=[]):
+        print(params)
         with self.connection.cursor() as cursor:
             cursor.execute(query, params)
             if cursor.description != None:
