@@ -1,12 +1,20 @@
 import asyncio
 import websockets
 
+connected_clients = set()
+
 async def handle_connection(websocket, path):
-    async for message in websocket:
-        if message == "collision":
-            print("Collision detected!")
-            # Send a WebSocket message back to the client
-            await websocket.send("collision_ack")  # You can customize the message as needed
+
+    connected_clients.add(websocket)
+
+    try:
+        async for message in websocket:
+            points = message
+            
+            for client in connected_clients:
+                await client.send(points) 
+    finally:
+        connected_clients.remove(websocket)
 
 start_server = websockets.serve(handle_connection, "localhost", 8000)
 

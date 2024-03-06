@@ -1,48 +1,27 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'
+import '../static/rewards.css';
 
-const Rewards = ({ onClose }) => {
+const Rewards = () => {
+    const [points, setPoints] = useState('');
+
     useEffect(() => {
-        const handleCollision = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/rewards', {
-                    method: 'GET',
-                });
+        axios.get('http://localhost:5000/rewards')
+            .then(response => {
+                console.log("setting points")
+                setPoints(response.data.points);
+            })
+            .catch(error => {
+                console.error('Error fetching rewards:', error);
+            });
+    }, []);
 
-                if (response.ok) {
-                    const scriptContent = await response.text();
-                    eval(scriptContent)
-
-                    console.log('Collision detected in React! Show rewards.');
-                    onClose(); 
-                } else {
-                    console.error('Failed to trigger rewards:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error:', error.message);
-            }
-        };
-
-        const ws = new WebSocket("ws://localhost:8000");
-
-        ws.onmessage = (event) => {
-            if (event.data === "collision_ack") {
-                handleCollision();
-            }
-        };
-
-        return () => {
-            ws.close();
-        };
-    }, [onClose]);
-
-   
-return ( /* START REACT COMPONENT */
-    <div className="popup">
-        <h2>Game Over</h2>
-        <button onClick={onClose}>Exit</button>
-    </div>
-/* END REACT COMPONENT */);
-
+    return (
+        <div>
+            <p>Points: {points}</p>
+        </div>
+    );
 };
+
 
 export default Rewards;

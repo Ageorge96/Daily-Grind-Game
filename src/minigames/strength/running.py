@@ -7,6 +7,8 @@ from pygame.locals import QUIT
 from websocket import create_connection
 import webview
 import requests
+import websockets
+import asyncio
 
 
 class RunningScreen(Screen): 
@@ -181,8 +183,31 @@ class RunningScreen(Screen):
             screen.blit(text_surface, text_rect)
 
         # Webview component to display React rewards component
-        def display_rewards():
-            webview.create_window("Rewards", "http://localhost:5000/rewards", width=400, height=300)
+            
+        points_collected = 5
+            
+        async def send_message_to_web_socket(message):
+            async with websockets.connect("ws://localhost:8000") as websocket:
+                await websocket.send(message)
+        
+        
+        def display_rewards(points_collected=points_collected):
+            # Define the JSON data to send in the request body
+            data = {"points_collected": points_collected}
+
+            # Make a POST request to the /rewards endpoint
+            response = requests.post('http://localhost:5000/rewards', json=data, headers={'Content-Type': 'application/json'})
+
+            # Check if the request was successful
+            if response.ok:
+                # Print the response content (optional)
+                print(response.json())
+                asyncio.run(send_message_to_web_socket((str(points_collected))))
+                print("response from flask received")
+            else:
+                # Print an error message if the request failed
+                print('Failed to trigger rewards:', response.status_code)
+            webview.create_window("Rewards", "http://localhost:5000/rewards", width=600, height=800 )
             webview.start()
             return "woodcutting"
 
@@ -208,25 +233,26 @@ class RunningScreen(Screen):
 
                 # Check for jumping and collision
                 if check_collision(hurdles):
-                    print("Collision detected! Game Over.")
+                    # print("Collision detected! Game Over.")
                     game_over = True  # Game over
                     pygame.mixer.music.stop()  # Stop background music
                     crash_sound.play()  # Play crash sound effect
                     points_gained = points
-                    ws.send("rewards")
                     
-                    # Use the requests library to send a POST request to Flask server
-                    url = 'http://localhost:5000/rewards'
-                    data = {}  # You can include data in the request if needed
-                    headers = {}  # You can include headers in the request if needed
-                    response = requests.post('http://localhost:5000/rewards', headers={'Content-Type': 'application/json'})
-                    print(response.text)
-                    # # Check the response if needed
-                    if response.status_code == 200:
-                         print("Request to Flask server successful")
-                    else:
-                         print(f"Request to Flask server failed with status code {response.status_code}")
+                    
+                    # # Use the requests library to send a POST request to Flask server
+                    # url = 'http://localhost:5000/rewards'
+                    # data = {}  # You can include data in the request if needed
+                    # headers = {}  # You can include headers in the request if needed
+                    # response = requests.post('http://localhost:5000/rewards', headers={'Content-Type': 'application/json'})
+                    # print(response.text)
+                    # # # Check the response if needed
+                    # if response.status_code == 200:
+                    #      print("Request to Flask server successful")
+                    # else:
+                    #      print(f"Request to Flask server failed with status code {response.status_code}")
                     display_rewards()
+                    ws.send(points)
                     return "dummy"
                 # Move hurdles
                 move_hurdles(hurdles)
