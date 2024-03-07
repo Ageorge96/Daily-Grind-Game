@@ -9,7 +9,6 @@ class UserStatsRepository:
         query = 'SELECT * FROM user_stats WHERE user_id=%s'
         result = self._connection.execute(query, [user_id])
 
-        print(result)
         if result != []:
             user_id = result[0][0]
             strength_level = result[0][2]
@@ -54,17 +53,11 @@ class UserStatsRepository:
 
         current_level_max = 100 + (getattr(user_stats, type_level) * 20)
 
-        print(experience_gain_total)
-        print(current_level_max)
-
         if experience_gain_total >= current_level_max:
-            print('made it')
             # increment level
-            level_up_query = 'UPDATE user_stats SET {} = {} + 1 WHERE user_id=%s'.format(type_level, type_level)
+            level_up_query = 'UPDATE user_stats SET {} = {} + 1, user_level = user_level + 1  WHERE user_id=%s'.format(type_level, type_level)
             print(level_up_query)
             self._connection.execute(level_up_query, [user_id])
-
-            print('dwidw122')
 
             # reset experience
             reset_experience_query = 'UPDATE user_stats SET {} = 0 WHERE user_id=%s'.format(add_experience_to)
@@ -78,7 +71,5 @@ class UserStatsRepository:
         
 
     def add_money(self, user_id: int, money: int):
-        print(money)
-        print(user_id)
         query = 'UPDATE user_stats SET user_money = user_money + %s WHERE user_id=%s'
         self._connection.execute(query, (money, user_id))

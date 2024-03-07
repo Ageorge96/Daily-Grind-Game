@@ -7,3 +7,4 @@ class Screen:
         self.theme = 'style/theme.json'
         self.data = {}
         
+
