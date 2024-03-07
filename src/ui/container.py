@@ -70,6 +70,9 @@ class Container:
     
     def add_bar(self, level, value, color, relative_rect:pygame.Rect, xp_next_level=20):
         max_value = 100
+        if level < 1:
+            xp_next_level = 100
+            
         if level > 1:
             for i in range(1, level):
                 max_value += xp_next_level

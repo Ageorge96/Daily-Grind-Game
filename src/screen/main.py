@@ -85,8 +85,11 @@ class MainScreen(Screen):
         container_history = Container(container_stats.width, container_user.height + container_user.y + 25, self.width/2, 350, manager, window_surface, padding_x=50, padding_y=50)        
         container_history.fill('#42adff')
         container_history.add_label('History', pygame.Rect((0, 10), (container_history.padding_rect[2], 40)), 'title')
+        
         stats_user = get_stats(self.data['user'].id, self.data['session'])
-        if stats_user:
+        
+        if stats_user[0]:
+            print(stats_user)
             i = 0
             stats = stats_user[1]
             stats.reverse()
