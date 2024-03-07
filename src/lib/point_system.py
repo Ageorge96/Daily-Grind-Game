@@ -15,7 +15,7 @@ class PointSystem:
     def get_rewards(self):
         exp = self.tally_experience()
         money = self.tally_money()
-        self.add_to_user_history()
+        self.add_to_user_history(exp, money)
 
         return exp, money
 
@@ -58,9 +58,9 @@ class PointSystem:
         # add money to user
         return reward
 
-    def add_to_user_history(self):
+    def add_to_user_history(self, experience, money):
         url = 'http://127.0.0.1:5000/stat/add'
-        payload = {'user_id': self.user_id, 'score': self.score, 'game': self.game}
+        payload = {'user_id': self.user_id, 'score': self.score, 'game': self.game, 'experience': experience, 'money': money}
 
         response = requests.post(url, payload)
 
