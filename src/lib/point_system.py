@@ -123,7 +123,7 @@ class PointSystem:
         url = 'http://127.0.0.1:5000/stat/add'
         payload = {'user_id': self.user_data['user'].id, 'score': self.score, 'game': self.game, 'experience': experience, 'money': money}
 
-        response = requests.post(url, payload)
+        response = requests.post(url, payload, cookies=self.user_data['session'])
 
         if response.status_code == 200:
             return True
