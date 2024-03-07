@@ -54,4 +54,21 @@ INSERT INTO questions (question, options, correct_answer) VALUES
 ('Who wrote "Moby-Dick"?', '{"Herman Melville", "Nathaniel Hawthorne", "Edgar Allan Poe", "Mark Twain"}', 'Herman Melville'),
 ('What is the chemical symbol for helium?', '{"He", "H", "Ha", "Hu"}', 'He'),
 ('Who composed the "Moonlight Sonata"?', '{"Ludwig van Beethoven", "Wolfgang Amadeus Mozart", "Johann Sebastian Bach", "Franz Schubert"}', 'Ludwig van Beethoven'),
-('What is the melting point of ice in Celsius?', '{"0°C", "100°C", "-10°C", "50°C"}', '0°C');
+('What is the melting point of ice in Celsius?', '{"0°C", "100°C", "-10°C", "50°C"}', '0°C'),
+('What is the largest ocean in the world?', '{"Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"}', 'Pacific Ocean'),
+('Who is known as the "Father of Medicine"?', '{"Hippocrates", "Aristotle", "Plato", "Socrates"}', 'Hippocrates'),
+('Which country is known as the Land of the Rising Sun?', '{"China", "Japan", "Korea", "Vietnam"}', 'Japan'),
+('What is the chemical symbol for helium?', '{"He", "H", "Ha", "Hu"}', 'He'),
+('Who composed the "Moonlight Sonata"?', '{"Ludwig van Beethoven", "Wolfgang Amadeus Mozart", "Johann Sebastian Bach", "Franz Schubert"}', 'Ludwig van Beethoven'),
+('What is the melting point of ice in Celsius?', '{"0°C", "100°C", "-10°C", "50°C"}', '0°C'),
+('Who is the author of "The Odyssey"?', '{"Homer", "Virgil", "Sophocles", "Plato"}', 'Homer'),
+('What is the chemical symbol for potassium?', '{"K", "Po", "Ka", "Ke"}', 'K'),
+('Which planet is known as the "Red Planet"?', '{"Venus", "Jupiter", "Mars", "Saturn"}', 'Mars'),
+('What is the boiling point of water in Celsius?', '{"100°C", "0°C", "50°C", "200°C"}', '100°C'),
+('Who painted the ceiling of the Sistine Chapel?', '{"Leonardo da Vinci", "Raphael", "Michelangelo", "Donatello"}', 'Michelangelo'),
+('What is the chemical symbol for iron?', '{"Ir", "Fe", "In", "Fu"}', 'Fe'),
+('What is the smallest bone in the human body?', '{"Femur", "Stapes", "Humerus", "Radius"}', 'Stapes'),
+('Which famous scientist is best known for his theory of gravity?', '{"Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"}', 'Isaac Newton'),
+('Who is credited with inventing the World Wide Web?', '{"Tim Berners-Lee", "Bill Gates", "Steve Jobs", "Mark Zuckerberg"}', 'Tim Berners-Lee'),
+('Which ocean is the largest?', '{"Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"}', 'Pacific Ocean');
+
