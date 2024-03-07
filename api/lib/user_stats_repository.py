@@ -9,6 +9,7 @@ class UserStatsRepository:
         query = 'SELECT * FROM user_stats WHERE user_id=%s'
         result = self._connection.execute(query, [user_id])
 
+        print(result)
         if result != []:
             user_id = result[0][0]
             strength_level = result[0][2]
