@@ -2,14 +2,31 @@ from math import floor
 import requests
 
 class PointSystem:
-    def __init__(self, user_id: int, user_type_level: int, score: int, game: str):
+    def __init__(self, user_id: int, score: int, game: str):
         self.user_id = user_id
-        self.user_type_level = user_type_level
         self.score = score
         self.game = game
+        self.user_stats = self.get_user_stats()
+
+
+    def get_user_stats(self):
+        url = f'http://127.0.0.1:5000/user_stats/find/{self.user_id}'
+        # params = {'user_id': self.user_id}
+
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            print('Found user')
+            return response.json()
+        
+        else:
+            print('Failed to add record to player\'s history')
+
 
     # wood cutting - 25
     # running - 900
+    # memory - 40
+    # quiz 65
 
     # Call on mini-game completion
     def get_rewards(self):
@@ -22,21 +39,31 @@ class PointSystem:
     def tally_experience(self):
         max_score: int
         game_type: str
+        type_level: str
 
         if self.game == 'woodcutting':
             max_score = 25
             game_type = 'strength'
+            type_level = self.user_stats['strength_level']
         elif self.game == 'running':
             max_score = 900
             game_type = 'strength'
+            type_level = self.user_stats['strength_level']
         elif self.game == 'quiz':
+            max_score = 65
             game_type = 'intellect'
+            type_level = self.user_stats['intellect_level']
         elif self.game == 'memory':
+            max_score = 40
             game_type = 'intellect'
+            type_level = self.user_stats['intellect_level']
         else:
             print("Error calculating results - Game not found")
 
-        reward = floor(((self.score * self.user_type_level) / max_score) * 25)
+        if type_level != 0:
+            reward = floor(((self.score * type_level) / max_score) * 25)
+        else:
+            reward = floor((self.score/ max_score) * 25)
 
         # add exp to user
         url = 'http://127.0.0.1:5000/user_stats/experience'
@@ -50,26 +77,39 @@ class PointSystem:
         else:
             print('Failed to add record to player\'s history')
 
-        print(reward)
         return reward
 
     
     def tally_money(self):
         max_score: int
         game_type: str
+        type_level: str
+
         if self.game == 'woodcutting':
             max_score = 25
             game_type = 'strength'
+            type_level = self.user_stats['strength_level']
         elif self.game == 'running':
             max_score = 900
             game_type = 'strength'
+            type_level = self.user_stats['strength_level']
         elif self.game == 'quiz':
-            max_score = 700
+            max_score = 65
             game_type = 'intellect'
+            type_level = self.user_stats['intellect_level']
+        elif self.game == 'memory':
+            max_score = 40
+            game_type = 'intellect'
+            type_level = self.user_stats['intellect_level']
         else:
             print("Error calculating results - Game not found")
 
-        reward = floor(((self.score * self.user_type_level) / max_score) * 100)
+        print(type_level)
+
+        if type_level != 0:
+            reward = floor(((self.score * type_level) / max_score) * 100)
+        else:
+            reward = floor((self.score/ max_score) * 100)
 
         # add money to user
         url = 'http://127.0.0.1:5000/user_stats/money'
@@ -83,7 +123,6 @@ class PointSystem:
         else:
             print('Failed to add record to player\'s history')
         
-        print(reward)
         return reward
 
     def add_to_user_history(self):
