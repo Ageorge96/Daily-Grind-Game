@@ -60,7 +60,6 @@ class WoodcuttingScreen(Screen):
         
         def set_tree():
             self.selected_tree = random.choice(list(tree_postion.keys()))
-            # print(self.selected_tree)
             cutting_image = pygame.image.load('./assets/axe_static.png')
             cutting_surface = pygame.transform.scale(cutting_image, (70, 70))
             cutting_rect = cutting_surface.get_rect(center = tree_postion[self.selected_tree])
@@ -142,8 +141,6 @@ class WoodcuttingScreen(Screen):
                 point_system = PointSystem(self.data, self.score, 'woodcutting')
                 
                 exp, money = point_system.get_rewards()
-                print(exp)
-                print(money)
                 return 'stop'
             
             timer.display()
