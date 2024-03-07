@@ -21,6 +21,7 @@ def validate_signup(email, username, password, error_label):
         response = requests.post(url, payload)
         
         if response.status_code == 200:
+            generate_user_stats(username)
             return (True, json.loads(response.text))
         
         else:
@@ -33,6 +34,15 @@ def validate_signup(email, username, password, error_label):
         error_label.set_text('One of the fields is empty!')
         params = { 'time_per_letter': 0.05 }
         error_label.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR, params)
+
+def generate_user_stats(username):
+    url = 'http://127.0.0.1:5000/user_stats/add'
+    payload = {'username': username}
+
+    response = requests.post(url, payload)
+
+    if response.status_code == 200:
+        print('stats added')
 
 class SignupScreen(Screen):
     def render(self):

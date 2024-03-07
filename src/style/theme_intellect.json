@@ -1,0 +1,24 @@
+{
+    "background_color": "#808080",
+    "button": {
+
+        "colours": {
+            "normal_bg": "#2a6b22",
+            "normal_text": "#ffffff",
+            "selected_bg": "#ff0000",  
+            "selected_text": "#000000"
+        },
+        "font":
+        {
+            "name": "robotomono",
+            "size": "20",
+            "regular_resource": {
+                 "package": "resources.fonts",
+                 "resource": "RobotoMono-Regular.ttf"
+            }
+        }
+    },
+    "misc": {
+        "padding": "20,20"
+    }
+}
