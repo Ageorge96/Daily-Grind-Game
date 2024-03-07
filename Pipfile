@@ -13,12 +13,12 @@ flask = "*"
 pygame-gui = "==0.6.9"
 pytest = "*"
 requests = "*"
-websockets = "*"
+flask = "*"
+psycopg2-binary = "*"
 flask-socketio = "*"
 pywebview = "*"
 flask-cors = "*"
 flask-restful = "*"
-websocket-client = "*"
 
 [dev-packages]
 

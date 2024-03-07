@@ -2,6 +2,18 @@ import pygame
 import pygame_gui
 
 from screen.screen import Screen
+from ui.container import Container
+
+import json, requests
+
+def get_stats(user_id, session):
+    url = f'http://127.0.0.1:5000/stat/list/{user_id}'
+    response = requests.get(url, cookies=session)
+        
+    if response.status_code == 200:
+        return (True, json.loads(response.text))
+    else:
+        return (False, response.text)
 
 class MainScreen(Screen):    
     def render(self):
@@ -11,16 +23,32 @@ class MainScreen(Screen):
         window_surface = pygame.display.set_mode((self.width, self.height), pygame.SCALED)
 
         background = pygame.Surface((self.width, self.height))
-        background.fill(pygame.Color('#000000'))
-        
-        font = pygame.font.Font('freesansbold.ttf', 32)
-        text = font.render(f"Welcome {self.user.username}!, your id is: {self.user.id} and email is: {self.user.email}", True, (255,255,255))
-        text_rect = text.get_rect(center=(self.width/2, self.height/2))
+        background.fill(pygame.Color('#ffffff'))
         
         manager = pygame_gui.UIManager((self.width, self.height), self.theme)
 
         clock = pygame.time.Clock()
         is_running = True
+
+        container_user = Container(0, 0, self.width, 80, manager, window_surface)
+
+        container_stats = Container(0, container_user.height, self.width/2, 350, manager, window_surface, padding=50)
+        container_history = Container(container_stats.width, container_user.height, self.width/2, 350, manager, window_surface, padding=50)
+        
+        container_minigames = Container(0, container_stats.y + container_stats.height, self.width, self.height - container_stats.y, manager, window_surface)
+
+        
+        container_history.add_label('History', pygame.Rect((0, 10), (container_history.width - container_history.padding, 40)), 'title')
+        stats_user = get_stats(self.data['user'].id, self.data['session'])
+        if stats_user:
+            i = 0
+            stats = stats_user[1]
+            stats.reverse()
+            stats = stats[:5]
+
+            for stat in stats:
+                i += 1 
+                container_history.add_label(f"{stat['game']} - {stat['score']} points", pygame.Rect((0, 40 + 35 * i), (container_history.width - container_history.padding, 30)), 'content_center')
 
         while is_running:
             time_delta = clock.tick(60)/1000.0
@@ -34,7 +62,12 @@ class MainScreen(Screen):
             manager.update(time_delta)
 
             window_surface.blit(background, (0, 0))
-            window_surface.blit(text, text_rect)
+
+            container_user.fill('#012abc')
+            container_stats.fill('#b617ff')
+            container_history.fill('#42adff')
+            container_minigames.fill('#ffffff')
+
             manager.draw_ui(window_surface)
 
             pygame.display.update()

@@ -7,10 +7,16 @@ class StatRepository:
     def __init__(self, connection):
         self._connection = connection
     
-    def list(self):
-        query = 'SELECT * FROM stats'
-        result = self._connection.execute(query)
+    def list(self, user_id=None):
+
+        if user_id == None:
+            query = 'SELECT * FROM stats'
         
+        else:
+            query = 'SELECT * FROM stats WHERE user_id=%s'
+        
+        result = self._connection.execute(query, user_id)
+
         if result != []:
             stats = []
         
@@ -19,9 +25,11 @@ class StatRepository:
                 user_id = row[1]
                 score = row[2]
                 game = row[3]
-                date = row[4]
+                experience = row[4]
+                money = row[5]
+                date = row[6]
                 
-                stat = Stat(id, user_id, score, game, date)
+                stat = Stat(id, user_id, score, game, experience, money, date)
                 stats.append(stat)
         
             return stats
@@ -29,13 +37,11 @@ class StatRepository:
         else:
             return None
     
-    def add(self, user_id, score, game):
-
-        stat = Stat(None, user_id, score, game)
+    def add(self, stat:Stat):
         timestamp = time.time()
         stat.date = datetime.fromtimestamp(timestamp, tz=None)
         
-        query = 'INSERT INTO stats (user_id, score, game, date) VALUES (%s, %s, %s, %s)'
-        self._connection.execute(query, (stat.user_id, stat.score, stat.game, stat.date,))
+        query = 'INSERT INTO stats (user_id, score, game, experience, money, date) VALUES (%s, %s, %s, %s, %s, %s)'
+        self._connection.execute(query, (stat.user_id, stat.score, stat.game, stat.experience, stat.money, stat.date,))
         
         
