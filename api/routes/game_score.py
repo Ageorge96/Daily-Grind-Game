@@ -1,9 +1,9 @@
-# server.py
 from flask import Flask, render_template, request, send_file, jsonify
 from flask_cors import CORS
 from flask_restful import Api, Resource
 import os
 from current_points import CurrentPoints
+
 
 app = Flask(__name__, static_folder = 'static')
 CORS(app)
