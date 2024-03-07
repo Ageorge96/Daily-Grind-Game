@@ -10,6 +10,9 @@ from pygame_gui.elements import UIButton, UITextEntryLine, UILabel, UITextBox
 from pygame_gui.core import ObjectID
 from minigames.intellect.score import Score
 from lib.timer import Timer
+from lib.point_system import PointSystem
+import webview
+import requests
 
 class QuestionRetrieval():
     @staticmethod
@@ -77,6 +80,27 @@ class QuizGame(Screen):
         timer = Timer(0, 5, manager)
         timer.start(0.66)
 
+        def display_rewards(points_collected, exp, money, username):
+            # Define the JSON data to send in the request body
+            data = {"points_collected": points_collected,
+                    "username": username,
+                    "exp": exp,
+                    "money": money}
+
+            # Make a POST request to the /rewards endpoint
+            response = requests.post('http://localhost:5000/rewards', json=data, headers={'Content-Type': 'application/json'})
+
+            # Check if the request was successful
+            if response.ok:
+                print(response.json())
+            else:
+                # Print an error message if the request failed
+                print('Failed to trigger rewards:', response.status_code)
+            webview.create_window("Rewards", "http://localhost:3000", width=600, height=600 )
+            webview.start()
+            return "dummy"
+
+
         def is_button_clicked(mouse_pos, clickable_pos):
             return clickable_pos.collidepoint(mouse_pos)
 
@@ -122,12 +146,14 @@ class QuizGame(Screen):
 
             # defining randomness
             questions_length = QuestionRetrieval.determine_randomness()
-            question_index = random.sample(range(questions_length), 1)
-
+            question_index = random.sample(range(1, questions_length + 1), 1)
+                
             # defining question, options and answers
             if self.question is None:
+                
                 questions_retrieval = QuestionRetrieval.fetch_questions(question_index)
                 self.question = questions_retrieval["question"]
+           
             
             answer_list = questions_retrieval["options"]
             correct_answer = questions_retrieval["answer"]
@@ -184,6 +210,11 @@ class QuizGame(Screen):
                 snail_x_pos += 0
                 window_surface.blit(snail_speech_surface, ((snail_x_pos, 450)))
                 window_surface.blit(speech_text, ((snail_x_pos+28, 480)))
+                point_system = PointSystem(self.data['user'].id, score.game_score, 'quiz')
+                exp, money = point_system.get_rewards()
+                print(exp, money)
+                display_rewards(score.game_score, exp, money, self.data['user'].username)
+                return "dummy"
             else:
                 snail_x_pos += 1
 

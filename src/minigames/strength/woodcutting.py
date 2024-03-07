@@ -6,6 +6,8 @@ import sys
 from screen.screen import Screen
 from lib.timer import Timer
 from lib.point_system import PointSystem
+import requests
+import webview
 
 class WoodcuttingScreen(Screen):
 
@@ -47,6 +49,26 @@ class WoodcuttingScreen(Screen):
         # Button dimensions
         BUTTON_WIDTH = 200
         BUTTON_HEIGHT = 50
+
+        def display_rewards(points_collected, exp, money, username):
+            # Define the JSON data to send in the request body
+            data = {"points_collected": points_collected,
+                    "username": username,
+                    "exp": exp,
+                    "money": money}
+
+            # Make a POST request to the /rewards endpoint
+            response = requests.post('http://localhost:5000/rewards', json=data, headers={'Content-Type': 'application/json'})
+
+            # Check if the request was successful
+            if response.ok:
+                print(response.json())
+            else:
+                # Print an error message if the request failed
+                print('Failed to trigger rewards:', response.status_code)
+            webview.create_window("Rewards", "http://localhost:3000", width=600, height=600 )
+            webview.start()
+            return "dummy"
 
 
         def draw_background(x, y):
@@ -139,8 +161,10 @@ class WoodcuttingScreen(Screen):
         while running:
             if not timer.status:
 
-                point_system = PointSystem(6,2,1,"hi")
-                point_system.get_rewards()
+                point_system = PointSystem(self.data['user'].id, self.score, 'quiz')
+                exp, money = point_system.get_rewards()
+                print(exp, money)
+                display_rewards(self.score, exp, money, self.data['user'].username)
                 return 'stop'
             
             timer.display()

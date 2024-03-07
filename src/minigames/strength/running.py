@@ -8,9 +8,10 @@ from websocket import create_connection
 import webview
 import requests
 import asyncio
+from lib.point_system import PointSystem
 
 
-class RunningScreen(Screen): 
+class RunningGameScreen(Screen): 
 
     def render(self): 
         # Initialize Pygame
@@ -187,10 +188,12 @@ class RunningScreen(Screen):
         username = "user_1"
         
         
-        def display_rewards(points_collected, username):
+        def display_rewards(points_collected, exp, money, username):
             # Define the JSON data to send in the request body
             data = {"points_collected": points_collected,
-                    "username": username}
+                    "username": username,
+                    "exp": exp,
+                    "money": money}
 
             # Make a POST request to the /rewards endpoint
             response = requests.post('http://localhost:5000/rewards', json=data, headers={'Content-Type': 'application/json'})
@@ -203,7 +206,7 @@ class RunningScreen(Screen):
                 print('Failed to trigger rewards:', response.status_code)
             webview.create_window("Rewards", "http://localhost:3000", width=600, height=600 )
             webview.start()
-            return "woodcutting"
+            return "dummy"
 
         points=0
 
@@ -229,7 +232,10 @@ class RunningScreen(Screen):
                     game_over = True  # Game over
                     pygame.mixer.music.stop()  # Stop background music
                     crash_sound.play()  # Play crash sound effect
-                    display_rewards(points, username)
+                    point_system = PointSystem(self.data['user'].id, points, 'running')
+                    exp, money = point_system.get_rewards()
+                    print(exp, money)
+                    display_rewards(points, exp, money, self.data['user'].username)
                     return "dummy"
                 # Move hurdles
                 move_hurdles(hurdles)

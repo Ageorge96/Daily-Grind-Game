@@ -1,3 +1,11 @@
+body {
+  background-color: #add8e6; /* Light baby blue color */
+   /* Replace 'clouds.png' with the path to your cloud image */
+  background-repeat: repeat; /* Repeat the image to cover the entire background */
+}
+
+
+
 .App {
   text-align: center;
 }
@@ -13,15 +21,27 @@
   }
 }
 
+@keyframes moveClouds {
+  from { background-position: 0 0; }
+  to { background-position: 100% 0; }
+}
+
+.App-header h1 {
+  color: #00008B; /* Dark blue color */
+}
+
 .App-header {
-  background-color: #282c34;
+  background-color: #6dcaf2;
+  background-image: url('clouds.png');
+  background-repeat: repeat-x; /* Repeat the image only horizontally */
+  animation: moveClouds 60s linear infinite; 
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: rgba(253, 253, 253, 0.856);
 }
 
 .App-link {
@@ -66,14 +86,21 @@
   animation: typing 2s steps(20) forwards; /* Animation to simulate typing */
 }
 
-/* Keyframes for the typing animation */
-@keyframes typing {
-  from {
-    width: 0; /* Start with no width (text hidden) */
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  to {
-    width: 100%; /* End with full width (text fully displayed) */
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
+
+.stats {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
 
 

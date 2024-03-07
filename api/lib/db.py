@@ -3,7 +3,7 @@ from flask import g
 import os
 
 DB_NAME = 'daily_grind'
-DB_USER = 'postgres'
+DB_USER = ''
 
 class DBConnection():
     
