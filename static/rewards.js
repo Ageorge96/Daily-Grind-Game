@@ -1,27 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios'
-import '../static/rewards.css';
+const React = require('react');
 
-const Rewards = () => {
-    const [points, setPoints] = useState('');
-
-    useEffect(() => {
-        axios.get('http://localhost:5000/rewards')
-            .then(response => {
-                console.log("setting points")
-                setPoints(response.data.points);
-            })
-            .catch(error => {
-                console.error('Error fetching rewards:', error);
-            });
-    }, []);
-
+const Rewards = ({ points }) => {
+    // Render React component with points data
     return (
-        <div>
-            <p>Points: {points}</p>
-        </div>
+        React.createElement('div', null,
+            React.createElement('p', null, `Points: ${points}`)
+        )
     );
 };
 
-
-export default Rewards;
+module.exports = Rewards;

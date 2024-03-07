@@ -187,8 +187,7 @@ game_over = False
 hurdles = []
 points_gained = 0
 
-# Create WebSocket connection
-ws = create_connection("ws://localhost:8000")
+
 
 while running:
     for event in pygame.event.get():
@@ -206,7 +205,7 @@ while running:
             pygame.mixer.music.stop()  # Stop background music
             crash_sound.play()  # Play crash sound effect
             points_gained = points
-            ws.send("rewards")
+
             
             # Use the requests library to send a POST request to Flask server
             url = 'http://localhost:5000/rewards'
@@ -277,7 +276,7 @@ while running:
     pygame.display.update()
     clock.tick(30)
 # Close WebSocket connection
-ws.close()
+
 
 # Quit Pygame
 pygame.quit()
