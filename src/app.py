@@ -20,7 +20,7 @@ run = True
 while run:
     response = currentScreen.render()
     if response == 'main':
-        Main.user = currentScreen.user
+        Main.data = currentScreen.data
         currentScreen = Main
 
     elif response == 'signup':
@@ -30,11 +30,11 @@ while run:
         currentScreen = Login
 
     elif response == 'strength':
-        Woodcutting.user = currentScreen.user
+        Woodcutting.data = currentScreen.data
         currentScreen = Woodcutting
     
     elif response == 'intellect':
-        Quiz.user = currentScreen.user
+        Quiz.data = currentScreen.data
         currentScreen = Quiz 
         
     elif response == 'stop':
