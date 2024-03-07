@@ -5,7 +5,7 @@ import requests, json
 from screen.screen import Screen
 from pygame_gui.elements import UIButton, UITextEntryLine, UILabel
 from pygame_gui.core import ObjectID
-from lib.user import User
+from lib.timer import Timer
 
 def validate_field(text):
     if text != '' and text != None:
@@ -13,26 +13,36 @@ def validate_field(text):
     else:
         return False
     
-def validate_login(username, password, error_label):
-    if validate_field(password) and validate_field(username):
-        url = 'http://127.0.0.1:5000/user/login'
-        payload = {'username': username, 'password': password}
+def validate_signup(email, username, password, error_label):
+    if validate_field(email) and validate_field(username) and validate_field(password):
+        url = 'http://127.0.0.1:5000/user/signup'
+        payload = {'email': email, 'username': username, 'password': password}
 
         response = requests.post(url, payload)
         
         if response.status_code == 200:
+            generate_user_stats(username)
             return (True, json.loads(response.text))
         
         else:
-            error_label.set_text('Username or password is incorrect!')
+            error_label.set_text('Username or email already exists!')
             params = { 'time_per_letter': 0.05 }
             error_label.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR, params)
     
              
     else:
-        error_label.set_text('Username or password is empty!')
+        error_label.set_text('One of the fields is empty!')
         params = { 'time_per_letter': 0.05 }
         error_label.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR, params)
+
+def generate_user_stats(username):
+    url = 'http://127.0.0.1:5000/user_stats/add'
+    payload = {'username': username}
+
+    response = requests.post(url, payload)
+
+    if response.status_code == 200:
+        print('stats added')
 
 class SignupScreen(Screen):
     def render(self):
@@ -71,7 +81,7 @@ class SignupScreen(Screen):
                                                 text='Cancel',
                                                 manager=manager)
     
-        error_label = UILabel(relative_rect=pygame.Rect((self.width/2 - 275/2, 465), (275, 50)),
+        error_label = UILabel(relative_rect=pygame.Rect((self.width/2 - 300/2, 465), (300, 50)),
                                                 text='',
                                                 object_id=ObjectID(class_id='@errors',
                                                                    object_id='#error_message'),
@@ -79,11 +89,17 @@ class SignupScreen(Screen):
         
         clock = pygame.time.Clock()
         is_running = True
-
+        timer = Timer(0, 0, manager)
+        redirect = False                    
+        
         while is_running:
+            if not timer.status and redirect:
+                return 'login'
             
+            timer.display()
+                            
             time_delta = clock.tick(60)/1000.0
-         
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     is_running = False
@@ -91,7 +107,18 @@ class SignupScreen(Screen):
                 
                 if event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_element == signup_button:
-                        pass
+                        email = email_field.get_text()
+                        username = username_field.get_text()
+                        password = password_field.get_text()
+                        
+                        if validate_signup(email, username, password, error_label):
+                            error_label.set_text('Account succesfully created! Redirecting...')
+                            params = { 'time_per_letter': 0.03 }
+                            error_label.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR, params)
+                            
+                            timer.start(0.1)
+                            redirect = True
+                        
                     elif event.ui_element == cancel_button:
                         return 'login'
 

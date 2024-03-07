@@ -5,6 +5,7 @@ import sys
 
 from screen.screen import Screen
 from lib.timer import Timer
+from lib.point_system import PointSystem
 
 class WoodcuttingScreen(Screen):
 
@@ -59,7 +60,6 @@ class WoodcuttingScreen(Screen):
         
         def set_tree():
             self.selected_tree = random.choice(list(tree_postion.keys()))
-            print(self.selected_tree)
             cutting_image = pygame.image.load('./assets/axe_static.png')
             cutting_surface = pygame.transform.scale(cutting_image, (70, 70))
             cutting_rect = cutting_surface.get_rect(center = tree_postion[self.selected_tree])
@@ -71,7 +71,7 @@ class WoodcuttingScreen(Screen):
             scoreboard.set_alpha(200)               
             scoreboard.fill(STRENGTH_THEME)      
             score = pygame.font.Font(None, 36)
-            score_surface = score.render(f"Trees Cut: {self.score}", True, BLACK) 
+            score_surface = score.render(f"Trees Cut: {self.score}", True, WHITE) 
             scoreboard.blit(score_surface, (20, 18))
             screen.blit(scoreboard, (self.width - 200, 10))
 
@@ -128,7 +128,7 @@ class WoodcuttingScreen(Screen):
         display_splash_screen()
 
 
-        timer = Timer(0, 12, manager)
+        timer = Timer(18, 12, manager)
         timer.start(0.66)
 
         clock = pygame.time.Clock()
@@ -137,6 +137,10 @@ class WoodcuttingScreen(Screen):
         running = True
         while running:
             if not timer.status:
+
+                point_system = PointSystem(self.data, self.score, 'woodcutting')
+                
+                exp, money = point_system.get_rewards()
                 return 'stop'
             
             timer.display()
@@ -155,14 +159,13 @@ class WoodcuttingScreen(Screen):
 
                     if is_button_clicked(mouse_pos, cutting_rect):
                         
-                        print(self.chop)
                         if self.chop == 0:
-                            print("TIMBER!!")
+                            # print("TIMBER!!")
                             tree_falling.play()
                             self.score += 1
                             self.reset_tree()
                         else:
-                            print("Chop!")
+                            # print("Chop!")
                             chop_2.play()
                             self.chop -= 1
 
@@ -189,10 +192,6 @@ class WoodcuttingScreen(Screen):
 
             # Cap the frame rate
             clock.tick(60)
-
-
-            if self.score == 10:
-                return 'main'
 
 
         # Quit Pygame

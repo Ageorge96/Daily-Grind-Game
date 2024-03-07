@@ -13,6 +13,8 @@ flask = "*"
 pygame-gui = "==0.6.9"
 pytest = "*"
 requests = "*"
+flask = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
