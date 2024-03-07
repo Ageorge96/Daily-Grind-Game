@@ -10,6 +10,31 @@ import json
 
 route_user_stats = Blueprint('route_user_stats/', __name__)
 
+@route_user_stats.route('/user_stats/find/<user_id>', methods=['GET'])
+def find_user_stat(user_id):
+    
+    if 'token' in session:
+        connection = get_flask_database_connection(route_user_stats)
+        user_stat_repo = UserStatsRepository(connection)
+        user_stats = user_stat_repo.find(user_id)
+        # print(response)
+
+        response = {
+            'user_id': user_stats.user_id,
+            'strength_level': user_stats.strength_level, 
+            'strength_experience': user_stats.strength_experience,
+            'intellect_level': user_stats.intellect_level, 
+            'intellect_experience': user_stats.intellect_experience,
+            'money': user_stats.money
+        }
+        
+        return Response(json.dumps(response), status=200, mimetype='application/json') 
+    
+    else:
+        response = {'message': 'You are not logged in'}
+        return Response(response={json.dumps(response)}, status=400, mimetype='application/json')
+
+
 @route_user_stats.route('/user_stats/add', methods=['POST'])
 def add_user_stat():
     username = request.form['username']
