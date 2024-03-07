@@ -12,6 +12,8 @@ points_collected = CurrentPoints()
 @route_game_score.route('/rewards', methods=['POST'])
 def handle_collision():
     if request.method == 'POST':
+        points_collected.reset()
+
         data = request.json
         points = data.get('points_collected')
         user = data.get('username')
@@ -20,28 +22,28 @@ def handle_collision():
         print('Collision detected in Flask!')
         print('exp:', exp)
         print('money:', money)
-
-       
+        print('user', user)
         
         points_collected.set_user(user)
         points_collected.add(points)
         points_collected.add_exp(exp)
         points_collected.add_money(money)
-        print("exp collection",points_collected.exp)
+        print("exp collection",points_collected.user)
         
         return jsonify({'message': 'OK', 'points': points})
 
 @route_game_score.route('/rewards')
 def get_points():
+
+    print("class user value:", points_collected.user)
     points = int(points_collected.game_points)
-    
     user = points_collected.user
     exp = points_collected.exp
     money = points_collected.money
 
     print("exp_points flask check:", exp)
 
-    points_collected.reset()
+    # points_collected.reset()
     return jsonify({'points': points,
                     'user': user,
                     'exp': exp,

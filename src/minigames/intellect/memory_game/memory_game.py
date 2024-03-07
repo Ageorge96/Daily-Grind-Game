@@ -75,7 +75,7 @@ class MemoryGame(Screen):
                 print('Failed to trigger rewards:', response.status_code)
             webview.create_window("Rewards", "http://localhost:3000", width=600, height=600 )
             webview.start()
-            return "dummy"
+            return "main"
 
 
         
@@ -114,10 +114,8 @@ class MemoryGame(Screen):
                 for event in pygame.event.get():
 
                     if event.type == pygame.QUIT:
-                            is_running = False
-                            pygame.quit()
-                            sys.exit()
-                            return 'stop'   
+                        is_running = False 
+                        return 'stop'   
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         mouse_pos = pygame.mouse.get_pos()
                         if is_button_clicked(mouse_pos, button_rect):
@@ -211,14 +209,12 @@ class MemoryGame(Screen):
                     GAME_OVER_font.set_bold(True)
                     GAME_OVER_text = GAME_OVER_font.render("GAME OVER!", True, WHITE)
 
-                    
-
                     text_width, text_height = GAME_OVER_text.get_size()
                     window_center = (window_surface.get_width() // 2, window_surface.get_height() // 2)
                     text_position = (window_center[0] - text_width // 2, window_center[1] - text_height // 2)
                     window_surface.blit(GAME_OVER_text, text_position)
 
-                    point_system = PointSystem(self.data, score.game_score, 'running')
+                    point_system = PointSystem(self.data, int(score.game_score), 'memory')
                     exp, money = point_system.get_rewards()
                     print(exp, money)
                     display_rewards(score.game_score, exp, money, self.data['user'].username)
@@ -236,4 +232,7 @@ class MemoryGame(Screen):
                 timer.display()
 
                 pygame.display.update()
+
+            pygame.quit()
+            sys.exit()
 

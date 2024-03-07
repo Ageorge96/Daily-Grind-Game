@@ -88,6 +88,7 @@ class QuizGame(Screen):
                     "money": money}
 
             # Make a POST request to the /rewards endpoint
+            print(username)
             response = requests.post('http://localhost:5000/rewards', json=data, headers={'Content-Type': 'application/json'})
 
             # Check if the request was successful
@@ -98,7 +99,7 @@ class QuizGame(Screen):
                 print('Failed to trigger rewards:', response.status_code)
             webview.create_window("Rewards", "http://localhost:3000", width=600, height=600 )
             webview.start()
-            return "dummy"
+            return "main"
 
         
 
@@ -134,6 +135,10 @@ class QuizGame(Screen):
             button_clicked = False
             while not button_clicked:
                 for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        is_running = False
+                        return 'stop'
+                        
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         mouse_pos = pygame.mouse.get_pos()
                         if is_button_clicked(mouse_pos, button_rect):
@@ -209,10 +214,11 @@ class QuizGame(Screen):
                 snail_x_pos += 0
                 window_surface.blit(snail_speech_surface, ((snail_x_pos, 450)))
                 window_surface.blit(speech_text, ((snail_x_pos+28, 480)))
-                point_system = PointSystem(self.data, int(score.game_score), 'running')
+                point_system = PointSystem(self.data, int(score.game_score), 'quiz')
                 exp, money = point_system.get_rewards()
                 print(exp, money)
-                display_rewards(int(score.game_score), exp, money, self.data["user"].username)
+                print(self.data)
+                display_rewards(score.game_score, exp, money, self.data['user'].username)
                 return "dummy"
             else:
                 snail_x_pos += 1
@@ -232,5 +238,8 @@ class QuizGame(Screen):
             timer.display()
             
             pygame.display.update()
+        
+        pygame.quit()
+        sys.exit()
             
 

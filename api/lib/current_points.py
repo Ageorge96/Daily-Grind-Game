@@ -10,15 +10,15 @@ class CurrentPoints():
 
     def add(self, single_points):
         if self.user is not None:
-            self.game_points += int(single_points)
+            self.game_points = int(single_points)
 
     def add_exp(self, exp):
         if self.user is not None:
-            self.exp += int(exp)
+            self.exp = int(exp)
 
     def add_money(self, money):
         if self.user is not None:
-            self.money += int(money)
+            self.money = int(money)
 
     def reset(self):
         self.game_points = 0
