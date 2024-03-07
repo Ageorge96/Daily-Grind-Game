@@ -5,5 +5,5 @@ class Screen:
         self.width = width
         self.height = height
         self.theme = 'style/theme.json'
-        self.user = user
+        self.data = {}
         

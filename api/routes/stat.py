@@ -22,6 +22,35 @@ def stat_list():
                 'user_id': stat.user_id,
                 'score': stat.score,
                 'game': stat.game,
+                'experience': stat.experience,
+                'money': stat.money,
+                'date': str(stat.date)
+            }
+            response.append(content)     
+        
+        return Response(json.dumps(response), status=200, mimetype='application/json') 
+    
+    else:
+        response = {'message': 'You are not logged in'}
+        return Response(response={json.dumps(response)}, status=400, mimetype='application/json')
+
+@route_stat.route('/stat/list/<user_id>', methods=['GET'])
+def stat_list_by_user_id(user_id):
+    if 'token' in session:
+        connection = get_flask_database_connection(route_stat)
+        stat_repo = StatRepository(connection)
+        stats = stat_repo.list(user_id)
+        
+        response = []
+        
+        for stat in stats:
+            content = {
+                'id': stat.id,
+                'user_id': stat.user_id,
+                'score': stat.score,
+                'game': stat.game,
+                'experience': stat.experience,
+                'money': stat.money,
                 'date': str(stat.date)
             }
             response.append(content)     
@@ -38,8 +67,10 @@ def stat_add():
         user_id = str(request.form['user_id'])
         score = int(request.form['score'])
         game = str(request.form['game'])
+        experience = int(request.form['experience'])
+        money = int(request.form['money'])
         
-        stat = Stat(None, user_id, score, game, None)
+        stat = Stat(None, user_id, score, game, experience, money, None)
         
         connection = get_flask_database_connection(route_stat)
         stat_repo = StatRepository(connection)
