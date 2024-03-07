@@ -1,6 +1,6 @@
 from screen.login import LoginScreen
 from screen.main import MainScreen
-from minigames.intellect.quiz import QuizGame
+from minigames.intellect.quiz.quiz import QuizGame
 from screen.signup import SignupScreen
 from minigames.strength.woodcutting import WoodcuttingScreen
 from minigames.intellect.memory_game.memory_game import MemoryGame
@@ -12,7 +12,7 @@ Main = MainScreen()
 Signup = SignupScreen() 
 Woodcutting = WoodcuttingScreen()
 Memory = MemoryGame()
-currentScreen = Main
+currentScreen = Quiz
 
 run = True
 
