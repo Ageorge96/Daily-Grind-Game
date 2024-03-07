@@ -3,8 +3,7 @@
     {
         "colours":
          {
-             "normal_text": "#ffffff",
-             "background": "#00A86B" 
+             "normal_text": "#ffffff"
          },
          
         "font":
@@ -16,7 +15,7 @@
                  "resource": "Minecraft-Regular.otf"
             }
         }
-    },
+    },  
 
     "text_entry_line":
     {
@@ -76,6 +75,10 @@
 
     "#title":
     {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
         "font":
         {
             "name": "robotomono",
@@ -97,7 +100,7 @@
         "font":
         {
             "name": "robotomono",
-            "size": "20",
+            "size": "18",
             "regular_resource": {
                  "package": "resources.fonts",
                  "resource": "RobotoMono-Regular.ttf"
@@ -108,5 +111,154 @@
         {
             "text_horiz_alignment": "center"
         }   
+    },
+
+    "#user_stat":
+    {
+        "colours":
+        {
+            "normal_text": "#000000"
+        },
+        "font":
+        {
+            "name": "robotomono",
+            "size": "18",
+            "regular_resource": {
+                 "package": "resources.fonts",
+                 "resource": "RobotoMono-Regular.ttf"
+            }
+        },
+
+        "misc":
+        {
+            "text_horiz_alignment": "center",
+            "text_vert_alignment": "center"
+        }   
+    },
+
+    "#label_bar":
+    {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
+        "font":
+        {
+            "name": "robotomono",
+            "size": "15",
+            "regular_resource": {
+                 "package": "resources.fonts",
+                 "resource": "RobotoMono-Regular.ttf"
+            }
+        },
+
+        "misc":
+        {
+            "text_horiz_alignment": "left",
+            "text_vert_alignment": "center",
+            "text_horiz_alignment_padding": "10"
+        }   
+    },
+
+    "#label_stats_left":
+    {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
+        "font":
+        {
+            "name": "robotomono",
+            "size": "18",
+            "regular_resource": {
+                 "package": "resources.fonts",
+                 "resource": "RobotoMono-Regular.ttf"
+            }
+        },
+
+        "misc":
+        {
+            "text_horiz_alignment": "left",
+            "text_vert_alignment": "center"
+        }   
+    },
+
+    "#label_stats_right":
+    {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
+        "font":
+        {
+            "name": "robotomono",
+            "size": "18",
+            "regular_resource": {
+                 "package": "resources.fonts",
+                 "resource": "RobotoMono-Regular.ttf"
+            }
+        },
+
+        "misc":
+        {
+            "text_horiz_alignment": "right",
+            "text_vert_alignment": "center"
+        }   
+    },
+
+    "#button_strength":
+    {
+        "colours":
+         {
+             "normal_text": "#ffffff",
+             "hovered_text": "#ffffff",
+             "normal_bg": "#fc0303",
+             "hovered_bg": "#fc0303"
+         },
+         
+        "font":
+        {
+            "name": "robotomono",
+            "size": "20",
+            "regular_resource": {
+                 "package": "resources.fonts",
+                 "resource": "RobotoMono-Regular.ttf"
+            }
+        },
+
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "5",
+            "border_width": "0"
+        }
+    },
+
+    "#button_intellect":
+    {
+        "colours":
+         {
+             "normal_text": "#ffffff",
+             "hovered_text": "#ffffff",
+             "normal_bg": "#09e343",
+             "hovered_bg": "#09e343" 
+         },
+         
+        "font":
+        {
+            "name": "robotomono",
+            "size": "20",
+            "regular_resource": {
+                 "package": "resources.fonts",
+                 "resource": "RobotoMono-Regular.ttf"
+            }
+        },
+
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "5",
+            "border_width": "0"
+        }
     }
 }

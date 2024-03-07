@@ -17,15 +17,15 @@ def find_user_stat(user_id):
         connection = get_flask_database_connection(route_user_stats)
         user_stat_repo = UserStatsRepository(connection)
         user_stats = user_stat_repo.find(user_id)
-        # print(response)
 
         response = {
             'user_id': user_stats.user_id,
+            'user_level': user_stats.user_level,
             'strength_level': user_stats.strength_level, 
             'strength_experience': user_stats.strength_experience,
             'intellect_level': user_stats.intellect_level, 
             'intellect_experience': user_stats.intellect_experience,
-            'money': user_stats.money
+            'user_money': user_stats.money
         }
         
         return Response(json.dumps(response), status=200, mimetype='application/json') 
