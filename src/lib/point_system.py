@@ -10,7 +10,7 @@ class PointSystem:
 
 
     def get_user_stats(self):
-        url = f"http://127.0.0.1:5000/user_stats/find/{self.user_data['user'].id}"
+        url = f'http://127.0.0.1:5000/user_stats/find/{self.user_data["user"].id}'
 
         response = requests.get(url, cookies=self.user_data['session'])
 
@@ -31,7 +31,7 @@ class PointSystem:
     def get_rewards(self):
         exp = self.tally_experience()
         money = self.tally_money()
-        self.add_to_user_history(exp, money)
+        # self.add_to_user_history(exp, money)
 
         return exp, money
 
@@ -43,38 +43,38 @@ class PointSystem:
         if self.game == 'woodcutting':
             max_score = 25
             game_type = 'strength'
-            type_level = self.user_stats['strength_level']
+            # type_level = self.user_stats['strength_level']
         elif self.game == 'running':
             max_score = 900
             game_type = 'strength'
-            type_level = self.user_stats['strength_level']
+            # type_level = self.user_stats['strength_level']
         elif self.game == 'quiz':
             max_score = 65
             game_type = 'intellect'
-            type_level = self.user_stats['intellect_level']
+            # type_level = self.user_stats['intellect_level']
         elif self.game == 'memory':
             max_score = 40
             game_type = 'intellect'
-            type_level = self.user_stats['intellect_level']
+            # type_level = self.user_stats['intellect_level']
         else:
             print("Error calculating results - Game not found")
 
-        if type_level != 0:
-            reward = floor(((self.score * type_level) / max_score) * 25)
-        else:
-            reward = floor((self.score/ max_score) * 25)
+        # if type_level != 0:
+        #     reward = floor(((self.score * type_level) / max_score) * 25)
+        # # else:
+        reward = floor((self.score/ max_score) * 25)
 
         # add exp to user
         url = 'http://127.0.0.1:5000/user_stats/experience'
         payload = {'user_id': self.user_data['user'].id, 'experience': reward, 'game_type': game_type}
 
-        response = requests.post(url, payload)
+        # response = requests.post(url, payload)
 
-        if response.status_code == 200:
-            print('Users account has been updated')
+        # if response.status_code == 200:
+        #     print('Users account has been updated')
         
-        else:
-            print('Failed to add record to player\'s history')
+        # else:
+        #     print('Failed to add record to player\'s history')
 
         return reward
 
@@ -98,24 +98,24 @@ class PointSystem:
         else:
             print("Error calculating results - Game not found")
 
-        print(type_level)
+        # print(type_level)
 
-        if type_level != 0:
-            reward = floor(((self.score * type_level) / max_score) * 100)
-        else:
-            reward = floor((self.score/ max_score) * 100)
+        # if type_level != 0:
+        #     reward = floor(((self.score * type_level) / max_score) * 100)
+        # # else:
+        reward = floor((self.score/ max_score) * 100)
 
         # add money to user
         url = 'http://127.0.0.1:5000/user_stats/money'
         payload = {'user_id': self.user_data['user'].id, 'money': reward}
 
-        response = requests.post(url, payload)
+        # response = requests.post(url, payload)
 
-        if response.status_code == 200:
-            print('Users account has been updated')
+        # if response.status_code == 200:
+        #     print('Users account has been updated')
         
-        else:
-            print('Failed to add record to player\'s history')
+        # else:
+        #     print('Failed to add record to player\'s history')
         
         return reward
 

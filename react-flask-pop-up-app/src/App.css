@@ -1,0 +1,106 @@
+body {
+  background-color: #add8e6; /* Light baby blue color */
+   /* Replace 'clouds.png' with the path to your cloud image */
+  background-repeat: repeat; /* Repeat the image to cover the entire background */
+}
+
+
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes moveClouds {
+  from { background-position: 0 0; }
+  to { background-position: 100% 0; }
+}
+
+.App-header h1 {
+  color: #00008B; /* Dark blue color */
+}
+
+.App-header {
+  background-color: #6dcaf2;
+  background-image: url('clouds.png');
+  background-repeat: repeat-x; /* Repeat the image only horizontally */
+  animation: moveClouds 60s linear infinite; 
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: rgba(253, 253, 253, 0.856);
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.trophy {
+  /* Set initial position and size */
+  width: 100px;
+  height: auto;
+
+  /* Apply animation */
+  animation: rotateTrophy 1s linear infinite alternate; /* Rotate back and forth */
+}
+
+@keyframes rotateTrophy {
+  /* Define animation keyframes */
+  0% {
+    transform: rotate(-5deg); /* Rotate slightly to the left */
+  }
+  100% {
+    transform: rotate(5deg); /* Rotate slightly to the right */
+  }
+}
+
+/* Styles for the game over text */
+#game-over {
+  font-family: Arial, sans-serif;
+  font-size: 24px;
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Hide overflowing text */
+  border-right: 1px solid black; /* Create the typing cursor */
+  animation: typing 2s steps(20) forwards; /* Animation to simulate typing */
+}
+
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stats {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+
+

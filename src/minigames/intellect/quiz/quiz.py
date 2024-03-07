@@ -10,6 +10,9 @@ from pygame_gui.elements import UIButton, UITextEntryLine, UILabel, UITextBox
 from pygame_gui.core import ObjectID
 from minigames.intellect.quiz.score import Score
 from lib.timer import Timer
+import webview
+import requests
+from lib.point_system import PointSystem
 
 class QuestionRetrieval():
     @staticmethod
@@ -77,6 +80,29 @@ class QuizGame(Screen):
         timer = Timer(0, 5, manager)
         timer.start(0.66)
 
+        def display_rewards(points_collected, exp, money, username):
+            # Define the JSON data to send in the request body
+            data = {"points_collected": points_collected,
+                    "username": username,
+                    "exp": exp,
+                    "money": money}
+
+            # Make a POST request to the /rewards endpoint
+            print(username)
+            response = requests.post('http://localhost:5000/rewards', json=data, headers={'Content-Type': 'application/json'})
+
+            # Check if the request was successful
+            if response.ok:
+                print(response.json())
+            else:
+                # Print an error message if the request failed
+                print('Failed to trigger rewards:', response.status_code)
+            webview.create_window("Rewards", "http://localhost:3000", width=600, height=600 )
+            webview.start()
+            return "main"
+
+        
+
         def is_button_clicked(mouse_pos, clickable_pos):
             return clickable_pos.collidepoint(mouse_pos)
 
@@ -109,6 +135,10 @@ class QuizGame(Screen):
             button_clicked = False
             while not button_clicked:
                 for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        is_running = False
+                        return 'stop'
+                        
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         mouse_pos = pygame.mouse.get_pos()
                         if is_button_clicked(mouse_pos, button_rect):
@@ -122,7 +152,7 @@ class QuizGame(Screen):
 
             # defining randomness
             questions_length = QuestionRetrieval.determine_randomness()
-            question_index = random.sample(range(1, questions_length + 1), 1)
+            question_index = random.sample(range(questions_length), 1)
 
             # defining question, options and answers
             if self.question is None:
@@ -182,8 +212,14 @@ class QuizGame(Screen):
                 
             if not timer.status:
                 snail_x_pos += 0
-                window_surface.blit(snail_speech_surface, ((snail_x_pos - 5, 450)))
-                window_surface.blit(speech_text, ((snail_x_pos+25, 480)))
+                window_surface.blit(snail_speech_surface, ((snail_x_pos, 450)))
+                window_surface.blit(speech_text, ((snail_x_pos+28, 480)))
+                point_system = PointSystem(self.data, int(score.game_score), 'quiz')
+                exp, money = point_system.get_rewards()
+                print(exp, money)
+                print(self.data)
+                display_rewards(score.game_score, exp, money, self.data['user'].username)
+                return "dummy"
             else:
                 snail_x_pos += 1
 
@@ -202,5 +238,8 @@ class QuizGame(Screen):
             timer.display()
             
             pygame.display.update()
+        
+        pygame.quit()
+        sys.exit()
             
 

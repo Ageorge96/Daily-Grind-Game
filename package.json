@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "node": "^21.7.0",
+    "websocket-extensions": "^0.1.4"
+  }
+}
