@@ -11,6 +11,8 @@ python-dotenv = "==1.0.1"
 pygame-gui = "==0.6.9"
 pytest = "*"
 requests = "*"
+flask = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 

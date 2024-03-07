@@ -7,10 +7,16 @@ class StatRepository:
     def __init__(self, connection):
         self._connection = connection
     
-    def list(self):
-        query = 'SELECT * FROM stats'
-        result = self._connection.execute(query)
+    def list(self, user_id=None):
+
+        if user_id == None:
+            query = 'SELECT * FROM stats'
         
+        else:
+            query = 'SELECT * FROM stats WHERE user_id=%s'
+        
+        result = self._connection.execute(query, user_id)
+
         if result != []:
             stats = []
         

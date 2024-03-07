@@ -2,7 +2,7 @@ import psycopg2
 from flask import g
 
 DB_NAME = 'daily_grind'
-DB_USER = 'naim'
+DB_USER = 'postgres'
 
 class DBConnection:
     

@@ -38,10 +38,17 @@ class MainScreen(Screen):
         container_minigames = Container(0, container_stats.y + container_stats.height, self.width, self.height - container_stats.y, manager, window_surface)
 
         
-        container_history.add_label('History', pygame.Rect((0, 0), (container_history.width - container_history.padding, 50)), 'title')
+        container_history.add_label('History', pygame.Rect((0, 10), (container_history.width - container_history.padding, 40)), 'title')
         stats_user = get_stats(self.data['user'].id, self.data['session'])
         if stats_user:
-            print(stats_user)
+            i = 0
+            stats = stats_user[1]
+            stats.reverse()
+            stats = stats[:5]
+
+            for stat in stats:
+                i += 1 
+                container_history.add_label(f"{stat['game']} - {stat['score']} points", pygame.Rect((0, 40 + 35 * i), (container_history.width - container_history.padding, 30)), 'content_center')
 
         while is_running:
             time_delta = clock.tick(60)/1000.0
