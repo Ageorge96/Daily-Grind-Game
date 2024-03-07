@@ -10,7 +10,7 @@ class PointSystem:
 
 
     def get_user_stats(self):
-        url = f'http://127.0.0.1:5000/user_stats/find/{self.user_data['user'].id}'
+        url = f'http://127.0.0.1:5000/user_stats/find/{self.user_data["user"].id}'
 
         response = requests.get(url, cookies=self.user_data['session'])
 

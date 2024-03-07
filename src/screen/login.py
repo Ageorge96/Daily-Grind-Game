@@ -96,7 +96,7 @@ class LoginScreen(Screen):
                         if result:
                             self.data['session'] = result[2]
                             self.data['user'] = User(result[1]['id'], result[1]['username'], result[1]['email'], result[1]['token'])
-                            return 'woodcutting'
+                            return 'memory'
                     
                     elif event.ui_element == signup_button:
                         return 'signup'

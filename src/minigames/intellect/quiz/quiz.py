@@ -8,8 +8,11 @@ import sys
 from screen.screen import Screen
 from pygame_gui.elements import UIButton, UITextEntryLine, UILabel, UITextBox
 from pygame_gui.core import ObjectID
-from minigames.intellect.score import Score
+from minigames.intellect.quiz.score import Score
 from lib.timer import Timer
+import webview
+import requests
+from lib.point_system import PointSystem
 
 class QuestionRetrieval():
     @staticmethod
@@ -40,7 +43,7 @@ class QuizGame(Screen):
 
     def render(self):
 
-        self.theme = 'src/style/theme_intellect.json'
+        self.theme = './style/theme_intellect.json'
         
         pygame.init()
         pygame.display.set_caption('Test Your Intellect...')
@@ -55,14 +58,14 @@ class QuizGame(Screen):
         BUTTON_WIDTH = 500
         BUTTON_HEIGHT = 80
 
-        snail_surface = pygame.image.load('src/assets/snail_image.jpg')
+        snail_surface = pygame.image.load('./assets/snail_image.jpg')
         snail_surface = pygame.transform.scale(snail_surface, (70,70))
 
         #defining snail speech
-        snail_speech_surface = pygame.image.load('src/assets/intellect/thought_bubble.png')
+        snail_speech_surface = pygame.image.load('./assets/intellect/thought_bubble.png')
         snail_speech_surface = pygame.transform.scale(snail_speech_surface, (150,100))
 
-        speech_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 15)
+        speech_font = pygame.font.Font('./resources/fonts/RobotoMono-Regular.ttf', 15)
         speech_text = speech_font.render("Time's Up!", True, (0, 0, 0))
         
         is_running = True
@@ -77,6 +80,28 @@ class QuizGame(Screen):
         timer = Timer(0, 5, manager)
         timer.start(0.66)
 
+        def display_rewards(points_collected, exp, money, username):
+            # Define the JSON data to send in the request body
+            data = {"points_collected": points_collected,
+                    "username": username,
+                    "exp": exp,
+                    "money": money}
+
+            # Make a POST request to the /rewards endpoint
+            response = requests.post('http://localhost:5000/rewards', json=data, headers={'Content-Type': 'application/json'})
+
+            # Check if the request was successful
+            if response.ok:
+                print(response.json())
+            else:
+                # Print an error message if the request failed
+                print('Failed to trigger rewards:', response.status_code)
+            webview.create_window("Rewards", "http://localhost:3000", width=600, height=600 )
+            webview.start()
+            return "dummy"
+
+        
+
         def is_button_clicked(mouse_pos, clickable_pos):
             return clickable_pos.collidepoint(mouse_pos)
 
@@ -84,18 +109,18 @@ class QuizGame(Screen):
             window_surface.fill(INTELLECT_THEME)
 
             # Set title
-            splash_title_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 40)
+            splash_title_font = pygame.font.Font('./resources/fonts/RobotoMono-Regular.ttf', 40)
             splash_title_font.set_bold(True)
             splash_title_text = splash_title_font.render("Welcome to the Quiz!", True, WHITE)
 
             # Set instructions
-            splash_instruction_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 25)
+            splash_instruction_font = pygame.font.Font('./resources/fonts/RobotoMono-Regular.ttf', 25)
             splash_instruction_text = splash_instruction_font.render("Collect 5 points for every correct answer.\n Lose 7 points for each incorrect answer.\n       Choose your answers wisely!", True, WHITE)
 
             # Set start game button
             button_rect = pygame.Rect((self.width // 2 - BUTTON_WIDTH // 2, self.height // 2 + 100), (BUTTON_WIDTH, BUTTON_HEIGHT))
             button_text = splash_title_font.render("Start Game", True, INTELLECT_THEME)
-            button_instruction_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 12)
+            button_instruction_font = pygame.font.Font('./resources/fonts/RobotoMono-Regular.ttf', 12)
             button_instruction_text = button_instruction_font.render('(Click here to start game)', True, INTELLECT_THEME)
 
             window_surface.blit(splash_title_text, (self.width // 2 - splash_title_text.get_width() // 2, self.height // 4))
@@ -134,18 +159,18 @@ class QuizGame(Screen):
             
             # defining score interface 
             score_keeper = "£" + str(score.game_score)
-            pot_of_gold_surface = pygame.image.load('src/assets/pot_of_gold.svg')
+            pot_of_gold_surface = pygame.image.load('./assets/pot_of_gold.svg')
             pot_of_gold_surface = pygame.transform.scale(pot_of_gold_surface, (40,40))
             pot_of_gold_rect = pot_of_gold_surface.get_rect(topright=(890, 20))
 
             """ choose font for questions and answers """
-            font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 20)
+            font = pygame.font.Font('./resources/fonts/RobotoMono-Regular.ttf', 20)
             font.set_bold(True)
             text = font.render(self.question, True, (255, 255, 255)) 
             text_rect = text.get_rect(center=(self.width/2, 120))
 
             """ Choose font for score keeping """
-            score_font = pygame.font.Font('src/resources/fonts/RobotoMono-Regular.ttf', 20)
+            score_font = pygame.font.Font('./resources/fonts/RobotoMono-Regular.ttf', 20)
             score_text = score_font.render(score_keeper, True, (255, 255, 255))
             score_text_rect = score_text.get_rect(bottomright=(950, 52))
 
@@ -158,7 +183,7 @@ class QuizGame(Screen):
                 button_capture.append(pygame.Rect(400, top_pixels[idx], 200, 50))
         
             """ define background for this page """
-            background_surface = pygame.image.load('src/assets/intellect/istockphoto-1185747322-612x612.jpg')
+            background_surface = pygame.image.load('./assets/intellect/istockphoto-1185747322-612x612.jpg')
             background_surface = pygame.transform.scale(background_surface, (1000,650))
 
             time_delta = clock.tick(60)/1000.0
@@ -184,6 +209,11 @@ class QuizGame(Screen):
                 snail_x_pos += 0
                 window_surface.blit(snail_speech_surface, ((snail_x_pos, 450)))
                 window_surface.blit(speech_text, ((snail_x_pos+28, 480)))
+                point_system = PointSystem(self.data, int(score.game_score), 'running')
+                exp, money = point_system.get_rewards()
+                print(exp, money)
+                display_rewards(int(score.game_score), exp, money, self.data["user"].username)
+                return "dummy"
             else:
                 snail_x_pos += 1
 

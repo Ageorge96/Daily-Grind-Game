@@ -163,6 +163,10 @@ class WoodcuttingScreen(Screen):
                 point_system = PointSystem(self.data, self.score, 'woodcutting')
                 
                 exp, money = point_system.get_rewards()
+
+                display_rewards(self.score, exp, money, self.data["user"].username)
+
+
                 return 'stop'
             
             timer.display()
