@@ -15,7 +15,7 @@ class StatRepository:
         else:
             query = 'SELECT * FROM stats WHERE user_id=%s'
         
-        result = self._connection.execute(query, user_id)
+        result = self._connection.execute(query, (user_id,))
 
         if result != []:
             stats = []

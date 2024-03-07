@@ -43,20 +43,24 @@ def stat_list_by_user_id(user_id):
         
         response = []
         
-        for stat in stats:
-            content = {
-                'id': stat.id,
-                'user_id': stat.user_id,
-                'score': stat.score,
-                'game': stat.game,
-                'experience': stat.experience,
-                'money': stat.money,
-                'date': str(stat.date)
-            }
-            response.append(content)     
-        
-        return Response(json.dumps(response), status=200, mimetype='application/json') 
-    
+        if stats != None:
+            for stat in stats:
+                content = {
+                    'id': stat.id,
+                    'user_id': stat.user_id,
+                    'score': stat.score,
+                    'game': stat.game,
+                    'experience': stat.experience,
+                    'money': stat.money,
+                    'date': str(stat.date)
+                }
+                response.append(content)     
+            
+            return Response(json.dumps(response), status=200, mimetype='application/json')
+        else:    
+            response = {'message': 'No stats for user'}
+            return Response(response={json.dumps(response)}, status=400, mimetype='application/json')
+            
     else:
         response = {'message': 'You are not logged in'}
         return Response(response={json.dumps(response)}, status=400, mimetype='application/json')
