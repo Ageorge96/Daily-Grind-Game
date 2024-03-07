@@ -3,14 +3,14 @@ from screen.main import MainScreen
 from screen.signup import SignupScreen
 from minigames.intellect.quiz.quiz import QuizGame
 from minigames.strength.woodcutting import WoodcuttingScreen
-from minigames.strength.running import RunningGameScreen
+#from minigames.strength.running import RunningGameScreen
 from minigames.intellect.memory_game.memory_game import MemoryGame
 
 Login = LoginScreen()
 Main = MainScreen()
 Signup = SignupScreen() 
 Woodcutting = WoodcuttingScreen()
-RunningGame = RunningGameScreen()
+#RunningGame = RunningGameScreen()
 Quiz = QuizGame()
 Memory = MemoryGame()
 
