@@ -137,7 +137,7 @@ class QuizGame(Screen):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         is_running = False
-                        return 'stop'
+                        return 'main'
                         
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         mouse_pos = pygame.mouse.get_pos()
@@ -216,10 +216,8 @@ class QuizGame(Screen):
                 window_surface.blit(speech_text, ((snail_x_pos+28, 480)))
                 point_system = PointSystem(self.data, int(score.game_score), 'quiz')
                 exp, money = point_system.get_rewards()
-                print(exp, money)
-                print(self.data)
                 display_rewards(score.game_score, exp, money, self.data['user'].username)
-                return "dummy"
+                return "main"
             else:
                 snail_x_pos += 1
 

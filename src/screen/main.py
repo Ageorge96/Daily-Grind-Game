@@ -38,7 +38,6 @@ class MainScreen(Screen):
 
         clock = pygame.time.Clock()
         is_running = True
-
         user_stats = get_user_stats(self.data['user'].id, self.data['session'])
         user_stats = user_stats[1]
 

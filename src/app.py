@@ -1,3 +1,4 @@
+from random import randint
 from screen.login import LoginScreen
 from screen.main import MainScreen
 from screen.signup import SignupScreen
@@ -22,7 +23,7 @@ run = True
 while run:
     response = currentScreen.render()
     if response == 'main':
-        # Main.user = currentScreen.user
+        Main.data = currentScreen.data
         currentScreen = Main
 
     elif response == 'signup':
@@ -31,21 +32,29 @@ while run:
     elif response == 'login':
         currentScreen = Login
 
-    elif response == 'woodcutting':
-        Woodcutting.data = currentScreen.data
-        currentScreen = Woodcutting
-    
-    elif response == 'RunningGame':
-        RunningGame.data = currentScreen.data
-        currentScreen = RunningGame
+    elif response == 'strength':
 
-    elif response == 'memory':
-        Memory.data = currentScreen.data
-        currentScreen = Memory
+        choice = randint(0, 1)
+        
+        if choice == 0:
+            Woodcutting.data = currentScreen.data
+            currentScreen = Woodcutting
+        else:
+            RunningGame.data = currentScreen.data
+            currentScreen = RunningGame
 
-    elif response == 'quiz':
-        Quiz.data = currentScreen.data
-        currentScreen = Quiz 
+    elif response == 'intellect':
 
+        choice = randint(0, 1)
+        
+        if choice == 0:
+            Memory.data = currentScreen.data
+            currentScreen = Memory
+        else:
+            Quiz.data = currentScreen.data
+            currentScreen = Quiz 
+
+
+        
     elif response == 'stop':
         run = False

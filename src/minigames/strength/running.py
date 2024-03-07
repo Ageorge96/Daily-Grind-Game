@@ -4,7 +4,6 @@ import os
 import random
 from screen.screen import Screen
 from pygame.locals import QUIT
-from websocket import create_connection
 import webview
 import requests
 import asyncio
@@ -25,7 +24,12 @@ class RunningGameScreen(Screen):
         # Colors
         WHITE = (255, 255, 255)
         BLACK = (0, 0, 0)
+        STRENGTH_THEME = (179, 0, 0)
         text_font = pygame.font.SysFont("Arial",42)
+
+        # Button dimensions
+        BUTTON_WIDTH = 200
+        BUTTON_HEIGHT = 50
 
         # Player properties
         player_width, player_height = 50, 50
@@ -182,6 +186,9 @@ class RunningGameScreen(Screen):
             text_rect.center = (wid//2, hei//2)
             screen.blit(text_surface, text_rect)
 
+        def is_button_clicked(mouse_pos, clickable_pos):
+            return clickable_pos.collidepoint(mouse_pos)
+
         # Webview component to display React rewards component
             
         
@@ -210,6 +217,47 @@ class RunningGameScreen(Screen):
 
         points=0
 
+        def display_splash_screen():
+            screen.fill(STRENGTH_THEME)
+
+            # Set title
+            splash_title_font = pygame.font.Font(None, 48)
+            splash_title_text = splash_title_font.render("Welcome to Track!", True, WHITE)
+
+            # Set instructions
+            splash_instruction_font = pygame.font.Font(None, 36)
+            splash_instruction_text = splash_instruction_font.render("Press the space bar to jump over the hurdles.", True, WHITE)
+
+            # Set start game button
+            button_rect = pygame.Rect((self.width // 2 - BUTTON_WIDTH // 2, self.height // 2 + 100), (BUTTON_WIDTH, BUTTON_HEIGHT))
+            button_text = splash_title_font.render("Start Game", True, STRENGTH_THEME)
+            button_instruction_font = pygame.font.Font(None, 14)
+            button_instruction_text = button_instruction_font.render('(Click here to start game)', True, STRENGTH_THEME)
+
+
+            screen.blit(splash_title_text, (self.width // 2 - splash_title_text.get_width() // 2, self.height // 4))
+            screen.blit(splash_instruction_text, (self.width // 2 - splash_title_text.get_width() // 1.1, self.height // 2.25))
+            pygame.draw.rect(screen, WHITE, button_rect)
+            screen.blit(button_text, (button_rect.centerx - button_text.get_width() // 2, button_rect.centery - button_text.get_height() // 2))
+            screen.blit(button_instruction_text, (button_rect.centerx - button_instruction_text.get_width() // 2, button_rect.centery + 13))
+            pygame.display.flip()
+
+            
+
+            # Wait for the user to click the button
+            button_clicked = False
+            while not button_clicked:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        mouse_pos = pygame.mouse.get_pos()
+                        if is_button_clicked(mouse_pos, button_rect):
+                            button_clicked = True
+
+        display_splash_screen()
+
         # Main game loop
         running = True
         game_over = False
@@ -232,11 +280,10 @@ class RunningGameScreen(Screen):
                     game_over = True  # Game over
                     pygame.mixer.music.stop()  # Stop background music
                     crash_sound.play()  # Play crash sound effect
-                    point_system = PointSystem(self.data['user'].id, points, 'running')
+                    point_system = PointSystem(self.data, points, 'running')
                     exp, money = point_system.get_rewards()
-                    print(exp, money)
                     display_rewards(points, exp, money, self.data['user'].username)
-                    return "dummy"
+                    return "main"
                 # Move hurdles
                 move_hurdles(hurdles)
 

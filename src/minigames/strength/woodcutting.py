@@ -68,7 +68,7 @@ class WoodcuttingScreen(Screen):
                 print('Failed to trigger rewards:', response.status_code)
             webview.create_window("Rewards", "http://localhost:3000", width=600, height=600 )
             webview.start()
-            return "dummy"
+            return "main"
 
 
         def draw_background(x, y):
