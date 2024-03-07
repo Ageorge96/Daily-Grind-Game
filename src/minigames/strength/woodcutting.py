@@ -167,7 +167,7 @@ class WoodcuttingScreen(Screen):
                 display_rewards(self.score, exp, money, self.data["user"].username)
 
 
-                return 'stop'
+                return 'main'
             
             timer.display()
 
