@@ -183,11 +183,11 @@ class RunningScreen(Screen):
 
         # Webview component to display React rewards component
             
-        points_collected = 5
+        
         username = "user_1"
         
         
-        def display_rewards(points_collected=points_collected):
+        def display_rewards(points_collected, username):
             # Define the JSON data to send in the request body
             data = {"points_collected": points_collected,
                     "username": username}
@@ -229,7 +229,7 @@ class RunningScreen(Screen):
                     game_over = True  # Game over
                     pygame.mixer.music.stop()  # Stop background music
                     crash_sound.play()  # Play crash sound effect
-                    display_rewards()
+                    display_rewards(points, username)
                     return "dummy"
                 # Move hurdles
                 move_hurdles(hurdles)

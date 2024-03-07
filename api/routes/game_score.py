@@ -1,18 +1,15 @@
-from flask import Flask, render_template, request, send_file, jsonify
+from flask import Flask, render_template, request, jsonify, Blueprint
 from flask_cors import CORS
 from flask_restful import Api, Resource
 import os
-from current_points import CurrentPoints
+from lib.current_points import CurrentPoints;
 
-
-app = Flask(__name__, static_folder = 'static')
-CORS(app)
-api = Api(app)
+route_game_score = Blueprint('route_game_score', __name__)
 
 
 points_collected = CurrentPoints()
     
-@app.route('/rewards', methods=['POST'])
+@route_game_score.route('/rewards', methods=['POST'])
 def handle_collision():
     if request.method == 'POST':
         data = request.json
@@ -26,13 +23,15 @@ def handle_collision():
         print("game_points flask check:", points_collected.game_points)
         return jsonify({'message': 'OK', 'points': points})
 
-@app.route('/rewards')
+@route_game_score.route('/rewards')
 def get_points():
     points = points_collected.game_points
     user = points_collected.user
+    print(points)
+
+    points_collected.reset()
 
     return jsonify({'points': points,
                     "user": user})
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
